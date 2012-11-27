@@ -71,3 +71,115 @@ GitHub
 git remote add origin git@github.com:uli-heller/uliwsgen.git
 git push -u origin master
 ```
+
+Links And Notes
+---------------
+
+### ASMified SampleWebService
+
+```java
+import java.util.*;
+import org.objectweb.asm.*;
+import org.objectweb.asm.attrs.*;
+public class SampleWebServiceDump implements Opcodes {
+
+public static byte[] dump () throws Exception {
+
+ClassWriter cw = new ClassWriter(0);
+FieldVisitor fv;
+MethodVisitor mv;
+AnnotationVisitor av0;
+
+cw.visit(V1_7, ACC_PUBLIC + ACC_ABSTRACT + ACC_INTERFACE, "SampleWebService", null,
+"java/lang/Object", null);
+
+{
+av0 = cw.visitAnnotation("Ljavax/jws/WebService;", true);
+av0.visit("name", "sampleWebService");
+av0.visit("targetNamespace", "http:/sample.de/sample-web-service/");
+av0.visitEnd();
+}
+cw.visitInnerClass("javax/jws/WebParam$Mode", "javax/jws/WebParam", "Mode",
+ACC_PUBLIC + ACC_FINAL + ACC_STATIC + ACC_ENUM);
+
+{
+mv = cw.visitMethod(ACC_PUBLIC + ACC_ABSTRACT, "echo",
+"(Ljava/lang/String;)Ljava/lang/String;", null, null);
+{
+av0 = mv.visitAnnotation("Ljavax/jws/WebMethod;", true);
+av0.visitEnd();
+}
+{
+av0 = mv.visitParameterAnnotation(0, "Ljavax/jws/WebParam;", true);
+av0.visit("name", "msg");
+av0.visitEnum("mode", "Ljavax/jws/WebParam$Mode;", "IN");
+av0.visitEnd();
+}
+mv.visitEnd();
+}
+cw.visitEnd();
+
+return cw.toByteArray();
+}
+}
+```
+
+### ASMified SampleWebServiceImpl
+
+```java
+import java.util.*;
+import org.objectweb.asm.*;
+import org.objectweb.asm.attrs.*;
+public class SampleWebServiceImplDump implements Opcodes {
+
+public static byte[] dump () throws Exception {
+
+ClassWriter cw = new ClassWriter(0);
+FieldVisitor fv;
+MethodVisitor mv;
+AnnotationVisitor av0;
+
+cw.visit(V1_7, ACC_PUBLIC + ACC_SUPER, "SampleWebServiceImpl", null,
+"java/lang/Object", new String[] { "SampleWebService" });
+
+{
+av0 = cw.visitAnnotation("Ljavax/jws/WebService;", true);
+av0.visit("endpointInterface", "SampleWebService");
+av0.visit("serviceName", "SampleWebService");
+av0.visit("targetNamespace", "http:/sample.de/sample-web-service/");
+av0.visitEnd();
+}
+{
+mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
+mv.visitCode();
+mv.visitVarInsn(ALOAD, 0);
+mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V");
+mv.visitInsn(RETURN);
+mv.visitMaxs(1, 1);
+mv.visitEnd();
+}
+{
+mv = cw.visitMethod(ACC_PUBLIC, "echo", "(Ljava/lang/String;)Ljava/lang/String;",
+null, null);
+mv.visitCode();
+mv.visitTypeInsn(NEW, "java/lang/StringBuilder");
+mv.visitInsn(DUP);
+mv.visitMethodInsn(INVOKESPECIAL, "java/lang/StringBuilder", "<init>", "()V");
+mv.visitLdcInsn("Echo: ");
+mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append",
+"(Ljava/lang/String;)Ljava/lang/StringBuilder;");
+mv.visitVarInsn(ALOAD, 1);
+mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append",
+"(Ljava/lang/String;)Ljava/lang/StringBuilder;");
+mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "toString",
+"()Ljava/lang/String;");
+mv.visitInsn(ARETURN);
+mv.visitMaxs(2, 2);
+mv.visitEnd();
+}
+cw.visitEnd();
+
+return cw.toByteArray();
+}
+}
+```
