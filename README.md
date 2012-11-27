@@ -27,6 +27,8 @@ bin/ant.sh
 WSGEN - The Original
 --------------------
 
+### Running WSGEN Against An Interface
+
 ```sh
 
 $ bin/wsgen.sh com.daemonspoint.webservice.SampleWebService
@@ -39,6 +41,8 @@ Examples:
   wsgen -cp . example.Stock
   wsgen -cp . example.Stock -wsdl -servicename {http://mynamespace}MyService
 ```
+
+### Running WSGEN Against The Implementation Of An Interface
 
 ```sh
 
