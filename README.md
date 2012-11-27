@@ -79,6 +79,8 @@ Links And Notes
 
 ### ASMified SampleWebService
 
+Genarate with: `bin/asmifier.sh com.daemonspoint.webservice.SampleWebService`
+
 ```java
 import java.util.*;
 import org.objectweb.asm.*;
@@ -127,6 +129,8 @@ return cw.toByteArray();
 ```
 
 ### ASMified SampleWebServiceImpl
+
+Genarate with: `bin/asmifier.sh com.daemonspoint.webservice.SampleWebServiceImpl`
 
 ```java
 import java.util.*;

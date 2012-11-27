@@ -1,0 +1,57 @@
+<project name="mywsgen" default="compile">
+
+<property name="classes" value="build/classes" />
+
+<path id="classpath.base">
+  <pathelement location="${classes}" />
+  <fileset dir="lib">
+    <include name="**/*.jar"/>
+  </fileset>
+</path>
+
+<path id="classpath.groovy">
+  <path refid="classpath.base" />
+  <pathelement location="bin/groovy/lib/*" />
+</path>
+
+<target name="compile" depends="lib, compile-java" />
+
+<target name="compile-java">
+  <mkdir dir="${classes}"/>
+  <javac srcdir="src/main/java" debug="true" destdir="${classes}" includeAntRuntime="false">
+    <classpath>
+      <path refid="classpath.base" />
+    </classpath>
+  </javac>
+</target>
+
+<taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc"/>
+<target name="compile-groovy">
+  <mkdir dir="${classes}"/>
+  <groovyc srcdir="src/main/groovy" destdir="${classes}">
+    <classpath>
+      <path refid="classpath.groovy" />
+    </classpath>
+  </groovyc>
+</target>
+
+<target name="clean">
+  <delete dir="tmp" />
+  <delete dir="lib" />
+  <delete dir="build" />
+  <delete dir="dist" />
+</target>
+
+<target name="lib" depends="groovy-lib">
+  <mkdir dir="lib" />
+</target>
+
+<target name="groovy-lib">
+  <copy todir="lib" flatten="true">
+    <fileset dir="bin/groovy/lib">
+      <include name="**/*.jar" />
+    </fileset>
+  </copy>
+</target>
+
+</project>
