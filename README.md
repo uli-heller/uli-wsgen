@@ -40,6 +40,9 @@ Usage: WSGEN [options] <SEI>
 Examples:
   wsgen -cp . example.Stock
   wsgen -cp . example.Stock -wsdl -servicename {http://mynamespace}MyService
+
+$ ls *.wsdl
+ls: cannot access *.wsdl: No such file or directory
 ```
 
 ### Running WSGEN Against The Implementation Of An Interface
