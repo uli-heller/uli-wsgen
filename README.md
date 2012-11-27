@@ -75,6 +75,8 @@ git push -u origin master
 Links And Notes
 ---------------
 
+* [Groovy: Methods and parameters](http://stackoverflow.com/questions/3782250/groovy-reflection-on-a-java-class-methods-and-parameters)
+
 ### ASMified SampleWebService
 
 ```java
