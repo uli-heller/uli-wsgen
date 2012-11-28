@@ -1,7 +1,7 @@
 ULIWSGEN
 =======
 
-Our goal is to implement a replacement for `wsgen -wsdl` which is able to create wsdl files from interfaces instead of concrete implementations.
+Our goal is to implement a replacement for `wsgen -wsdl` which is able to create wsdl files from interfaces instead of concrete implementations. At the moment, this is work in progress. It is not functional!
 
 Project Structure
 -----------------
@@ -15,6 +15,7 @@ Project Structure
     * wsgen.sh ... wrapper for JDK wsgen
 * build ... files generated when doing the compilation
     * classes ... compiled Java class files
+* groovy-scripts ... various groovy scripts
 * src ... various source files
 
 Compile Project
