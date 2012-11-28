@@ -1,7 +1,7 @@
 ULIWSGEN
 =======
 
-Our goal is to implement a replacement for `wsgen -wsdl` which is able to create wsdl files from interfaces instead of concrete implementations. At the moment, this is work in progress. There is now a working prototype, but it is very ugly at the moment. (`bin/groovy.sh groovy-scripts/uliWsGen.groovy -c build/classes com.daemonspoint.webservice.SampleWebService` creates "UliWsGenTemporaryClassService.wsdl")
+Our goal is to implement a replacement for `wsgen -wsdl` which is able to create wsdl files from interfaces instead of concrete implementations. At the moment, this is work in progress. There is now a working prototype, but it is very ugly at the moment. (`bin/groovy.sh groovy-scripts/uliWsGen.groovy -c build/classes com.daemonspoint.webservice.SampleWebService` creates "SampleWebServiceImpl.wsdl")
 
 Project Structure
 -----------------
@@ -23,6 +23,45 @@ Compile Project
 
 ```sh
 bin/ant.sh
+```
+
+Some Tests
+----------
+
+Please remember: Before doing the tests, you have to compile the project by executing `bin/ant.sh`!
+
+### SampleWebService
+
+```sh
+$ ./bin/uli-wsgen.sh -c build/classes com.daemonspoint.webservice.SampleWebService
+$ ls *.wsdl
+SampleWebServiceImplService.wsdl
+```
+
+### SampleWebServiceImpl
+
+```sh
+$ ./bin/uli-wsgen.sh -c build/classes com.daemonspoint.webservice.SampleWebServiceImpl
+Class 'com.daemonspoint.webservice.SampleWebServiceImpl' is not an interface - please use 'wsgen' directly
+```
+
+### ComplexWebService
+
+```sh
+$ ./bin/uli-wsgen.sh -c build/classes com.daemonspoint.webservice.ComplexWebService
+$ ls *.wsdl
+ComplexWebServiceImplService.wsdl
+```
+
+### ComplexWebServiceImpl
+
+```sh
+$ ./bin/uli-wsgen.sh -c build/classes com.daemonspoint.webservice.ComplexWebServiceImpl
+Caught: java.lang.ClassNotFoundException: com.daemonspoint.webservice.ComplexWebServiceImpl
+java.lang.ClassNotFoundException: com.daemonspoint.webservice.ComplexWebServiceImpl
+	at SourceInterface.loadClass(uliWsGen.groovy:148)
+	at SourceInterface.setClassName(uliWsGen.groovy:144)
+	at uliWsGen.run(uliWsGen.groovy:61)
 ```
 
 WSGEN - The Original

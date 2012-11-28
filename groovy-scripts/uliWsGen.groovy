@@ -87,8 +87,12 @@ try {
     //processBuilder.directory(temporaryFolder);
     Process process = processBuilder.start();
     result = process.waitFor();
-    System.out.println(process.getErrorStream().getText());
-    System.out.println(process.getInputStream().getText());
+    if (result != 0) {
+      System.err.println("STDERR:");
+      System.err.println(process.getErrorStream().getText());
+      System.out.println("STDOUT:");
+      System.out.println(process.getInputStream().getText());
+    }
   }
 } finally {
   cleanup.cleanup();
