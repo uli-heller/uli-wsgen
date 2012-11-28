@@ -3,6 +3,8 @@ ULI-WSGEN
 
 Our goal is to implement a replacement for `wsgen -wsdl` which is able to create wsdl files from interfaces instead of concrete implementations. At the moment, this is work in progress. There is now a working prototype, but it is quite ugly at the moment.
 
+For third-party products we use, please see the corresponding section towards the end of this document!
+
 Project Structure
 -----------------
 
@@ -116,6 +118,18 @@ GitHub
 git remote add origin git@github.com:uli-heller/uli-wsgen.git
 git push -u origin master
 ```
+
+Third Party Products And Tools
+------------------------------
+
+Here is a list of the 3rd party products and tools we are using for this project:
+
+* [GitHub](http://github.com) ... for hosting the source code
+* [Git](http://git-scm.org) ... for accessing hosted source code
+* [Groovy](http://groovy.codehaus.org) ... a scripting language for the Java VM
+* [Java](http://java.oracle.com) ... the programming language and execution environment we use
+* [Membrane-SOA](http://www.membrane-soa.org/) ... the wsdl diff tool be use for test validation
+* Linux, Bash, ...
 
 Links And Notes
 ---------------
