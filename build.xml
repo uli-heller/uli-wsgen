@@ -39,7 +39,13 @@
   <delete dir="tmp" />
   <delete dir="lib" />
   <delete dir="build" />
+  <delete dir="com" />
   <delete dir="dist" />
+  <delete dir="bin/groovy" />
+  <delete>
+    <fileset dir="." includes="**/*~" defaultexcludes="no">
+    </fileset>
+  </delete>
 </target>
 
 <target name="lib" depends="groovy-lib">
