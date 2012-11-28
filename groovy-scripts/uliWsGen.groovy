@@ -227,6 +227,7 @@ class Implementation extends Base {
 
   public boolean compile(String code) {
     this.createFolders();
+    this.cleanup.add(this.getClassFile());
     // http://www.java2s.com/Code/Java/JDK-6/CompilingfromMemory.htm
     JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
     StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
