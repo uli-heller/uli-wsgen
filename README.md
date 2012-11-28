@@ -1,7 +1,7 @@
 ULIWSGEN
 =======
 
-Our goal is to implement a replacement for `wsgen -wsdl` which is able to create wsdl files from interfaces instead of concrete implementations. At the moment, this is work in progress. It is not functional!
+Our goal is to implement a replacement for `wsgen -wsdl` which is able to create wsdl files from interfaces instead of concrete implementations. At the moment, this is work in progress. There is now a working prototype, but it is very ugly at the moment. (`bin/groovy.sh groovy-scripts/uliWsGen.groovy -c build/classes com.daemonspoint.webservice.SampleWebService` creates "UliWsGenTemporaryClassService.wsdl")
 
 Project Structure
 -----------------
@@ -76,7 +76,8 @@ git push -u origin master
 Links And Notes
 ---------------
 
-* [Groovy: Methods and parameters](http://stackoverflow.com/questions/3782250/groovy-reflection-on-a-java-class-methods-and-parameters)
+* [StackOverflow: Groovy - Methods and parameters](http://stackoverflow.com/questions/3782250/groovy-reflection-on-a-java-class-methods-and-parameters)
+* [BeyondLinux: Dynamically compile a java class](http://www.beyondlinux.com/2011/07/20/3-steps-to-dynamically-compile-instantiate-and-run-a-java-class/)
 
 ### ASMified SampleWebService
 
