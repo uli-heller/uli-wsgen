@@ -1,7 +1,7 @@
-ULIWSGEN
-=======
+ULI-WSGEN
+=========
 
-Our goal is to implement a replacement for `wsgen -wsdl` which is able to create wsdl files from interfaces instead of concrete implementations. At the moment, this is work in progress. There is now a working prototype, but it is very ugly at the moment. (`bin/groovy.sh groovy-scripts/uliWsGen.groovy -c build/classes com.daemonspoint.webservice.SampleWebService` creates "SampleWebServiceImpl.wsdl")
+Our goal is to implement a replacement for `wsgen -wsdl` which is able to create wsdl files from interfaces instead of concrete implementations. At the moment, this is work in progress. There is now a working prototype, but it is quite ugly at the moment.
 
 Project Structure
 -----------------
@@ -13,9 +13,12 @@ Project Structure
     * myjar.sh ... wrapper for JDK jar
     * prepare.sh ... downloads and unpacks the project dependencies
     * wsgen.sh ... wrapper for JDK wsgen
+    * uli-wsgen.sh ... wrapper for groovy-scripts/uliWsGen.groovy
 * build ... files generated when doing the compilation
     * classes ... compiled Java class files
 * groovy-scripts ... various groovy scripts
+    * examineInterface.groovy ... a test script which prints some attributes of a Java interface
+    * uliWsGen.groovy ... the main script which is able to create wsdl files from Java interfaces
 * src ... various source files
 
 Compile Project
@@ -29,6 +32,8 @@ Some Tests
 ----------
 
 Please remember: Before doing the tests, you have to compile the project by executing `bin/ant.sh`!
+
+Below, you'll find the commands to execute and the expected outcomes.
 
 ### SampleWebService
 
@@ -108,7 +113,7 @@ GitHub
 ### Publish Project On GitHub
 
 ```sh
-git remote add origin git@github.com:uli-heller/uliwsgen.git
+git remote add origin git@github.com:uli-heller/uli-wsgen.git
 git push -u origin master
 ```
 
