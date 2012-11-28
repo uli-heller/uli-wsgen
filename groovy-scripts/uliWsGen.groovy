@@ -211,8 +211,11 @@ class Implementation extends Base {
 
   public String getCode(SourceInterface sourceInterface) {
     StringBuffer code = new StringBuffer(256);
+    String pn = this.getPackageName();
+    if (this.isNotEmpty(pn)) {
+      code.append("package ${pn};\n");
+    }
     code.append("""
-      package ${this.getPackageName()};
       @javax.jws.WebService
       public class ${this.getImplementationName()} implements ${sourceInterface.className} {
     """);
@@ -242,7 +245,7 @@ class Implementation extends Base {
     List<String> compilerOptions = new LinkedList<String>();
     compilerOptions.add("-d")
     compilerOptions.add(this.topLevel.getAbsolutePath());
-    if (this.classPath != null && this.classPath.length() > 0) {
+    if (isNotEmpty(this.classPath)) {
       compilerOptions.add("-cp");
       compilerOptions.add(this.classPath);
     }
@@ -254,6 +257,7 @@ class Implementation extends Base {
 }
 
 class Base {
+  static final String[] EMPTY=new String[0];
   public String className;
   String[] tokenizedClassName;
 
@@ -267,7 +271,10 @@ class Base {
   }
 
   public String[] getPackageNames() {
-    String[] packageNames = this.tokenizedClassName[0..-2];
+    String[] packageNames = EMPTY;
+    if (this.tokenizedClassName.size() > 1) {
+      packageNames = this.tokenizedClassName[0..-2];
+    }
     return packageNames;
   }
 
@@ -286,10 +293,22 @@ class Base {
 
   static public String packageAndClassName(String packageName, String className) {
     String result = className;
-    if (packageName != null && packageName.length() > 0) {
+    if (this.isNotEmpty(packageName)) {
       result = packageName + "." + className;
     }
     return result;
+  }
+
+  static public boolean isEmpty(String s) {
+    boolean rc=true;
+    if (s != null && s.trim().length() > 0) {
+      rc=false;
+    }
+    return rc;
+  }
+
+  static public boolean isNotEmpty(String s) {
+    return !(isEmpty(s));
   }
 }
 

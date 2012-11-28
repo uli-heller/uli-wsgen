@@ -7,6 +7,16 @@ List of Open TODOs
     * test against various web service interfaces (work in progress)
 * Port to Windows
 * Use ASM instead of JAVAC
+* Specify a service name via command line parameters
+    * for the service implementation class
+    * for the final execution of the wsgen command
+* Specify a port name via command line parameters
+    * for the service implementation class
+    * for the final execution of the wsgen command
+* Specify a target name space via command line parameters
+    * for the service implementation class
+    * for the final execution of the wsgen command
+* Package the binaries
 
 Closed TODOs
 ============
