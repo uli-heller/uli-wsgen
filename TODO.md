@@ -9,7 +9,7 @@ List of Open TODOs
 * Port to Windows
 * Use ASM instead of JAVAC
 
-Closes TODOs
+Closed TODOs
 ============
 
 * Implement a prototype for proof-of-concept
