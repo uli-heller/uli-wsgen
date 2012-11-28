@@ -25,16 +25,6 @@
   </javac>
 </target>
 
-<taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc"/>
-<target name="compile-groovy">
-  <mkdir dir="${classes}"/>
-  <groovyc srcdir="src/main/groovy" destdir="${classes}">
-    <classpath>
-      <path refid="classpath.groovy" />
-    </classpath>
-  </groovyc>
-</target>
-
 <target name="clean">
   <delete dir="tmp" />
   <delete dir="lib" />

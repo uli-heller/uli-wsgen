@@ -14,6 +14,7 @@ Project Structure
     * groovy.sh ... wrapper for groovy
     * myjar.sh ... wrapper for JDK jar
     * prepare.sh ... downloads and unpacks the project dependencies
+    * wsdldiff.sh ... wrapper for groovy-scripts/wsdlDiff.groovy
     * wsgen.sh ... wrapper for JDK wsgen
     * uli-wsgen.sh ... wrapper for groovy-scripts/uliWsGen.groovy
 * build ... files generated when doing the compilation
@@ -21,7 +22,9 @@ Project Structure
 * groovy-scripts ... various groovy scripts
     * examineInterface.groovy ... a test script which prints some attributes of a Java interface
     * uliWsGen.groovy ... the main script which is able to create wsdl files from Java interfaces
+    * wsdlDiff.groovy ... script for comparing two wsdl files - copied from <http://www.membrane-soa.org/>, CompareWSDL.java
 * src ... various source files
+* test-data ... some wsdl files to validate our tests
 
 Compile Project
 ---------------
