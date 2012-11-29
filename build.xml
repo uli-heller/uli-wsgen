@@ -51,7 +51,7 @@
   </delete>
 </target>
 
-<target name="dist" depends="-unpack-groovy">
+<target name="dist" depends="-unpack-groovy, compile">
   <exec executable="${basedir}/bin/groovy/bin/groovy" dir="groovy-scripts">
     <env key="GROOVY_HOME" path="${basedir}/bin/groovy"/>
     <arg value="GroovyWrapper"/>

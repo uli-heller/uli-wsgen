@@ -16,7 +16,6 @@ List of Open TODOs
 * Specify a target name space via command line parameters
     * for the service implementation class
     * for the final execution of the wsgen command
-* Package the binaries
 
 Closed TODOs
 ============
@@ -24,3 +23,4 @@ Closed TODOs
 * Implement a prototype for proof-of-concept
 * Make the prototype more robust
     * test against illegal classes/interfaces
+* Package the binaries - `ant dist` creates uli-wsgen*.jar

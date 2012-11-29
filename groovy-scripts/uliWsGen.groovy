@@ -58,7 +58,7 @@ if (options.c) {
   }
 }
 
-SourceInterface sourceInterface = new SourceInterface(className: parsedArgs[0]);
+SourceInterface sourceInterface = new SourceInterface(className: parsedArgs[0], classLoader: cl);
 sourceInterface.check();
 
 int result=0;
@@ -125,10 +125,15 @@ class JavaSourceFromString extends SimpleJavaFileObject {
 }
 
 class SourceInterface extends Base {
+  public ClassLoader classLoader;
   Class clazz;
 
   public boolean check() {
     //this.loadClass();
+    if (this.clazz == null) {
+      System.err.println("Class '${this.className}' could not be loaded - class not found!");
+      System.exit(1);
+    }
     if (! isWebService(this.clazz)) {
       System.err.println("Class '${this.className}' is not a jaxws webservice - annotation @WebService is missing");
       System.exit(1);
@@ -144,8 +149,19 @@ class SourceInterface extends Base {
     this.loadClass();
   }
 
+  public void setClassLoader(ClassLoader classLoader) {
+    this.classLoader = classLoader;
+    this.loadClass();
+  }
+
   private void loadClass() {
-    this.clazz = this.getClass().getClassLoader().loadClass(this.className);
+    ClassLoader cl = this.classLoader ?: this.getClass().getClassLoader();
+    try {
+      this.clazz = cl.loadClass(this.className);
+    } catch (Exception e) {
+      // ignore the exception - we *will* detect this later!
+      ;
+    }
   }
 
   private boolean isWebService(Class clazz) {
