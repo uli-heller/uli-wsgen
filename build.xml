@@ -4,6 +4,10 @@
   <file file="build.properties"/>
 </loadproperties>
 
+<condition property="EXT" value=".bat" else=".sh">
+  <os family="windows"/>
+</condition>
+
 <property name="classes" value="build/classes" />
 
 <path id="classpath.base">
@@ -47,7 +51,7 @@
   </delete>
 </target>
 
-<target name="dist">
+<target name="dist" depends="-unpack-groovy">
   <exec executable="${basedir}/bin/groovy/bin/groovy" dir="groovy-scripts">
     <env key="GROOVY_HOME" path="${basedir}/bin/groovy"/>
     <arg value="GroovyWrapper"/>
@@ -63,7 +67,15 @@
   <mkdir dir="lib" />
 </target>
 
-<target name="groovy-lib">
+<target name="-check-unpack-groovy" unless="groovy.is.unpacked">
+    <available property="groovy.is.unpacked" file="bin/groovy/bin/groovy"/>
+</target>
+<target name="-unpack-groovy" depends="-check-unpack-groovy" unless="${groovy.is.unpacked}">
+  <exec executable="${basedir}/bin/prepare${EXT}">
+  </exec>
+</target>
+
+<target name="groovy-lib" depends="-unpack-groovy">
   <copy todir="lib" flatten="true">
     <fileset dir="bin/groovy/lib">
       <include name="**/*.jar" />
