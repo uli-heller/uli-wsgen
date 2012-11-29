@@ -54,7 +54,7 @@
 <target name="dist" depends="-unpack-groovy, compile">
   <exec executable="${basedir}/bin/groovy/bin/groovy" dir="groovy-scripts">
     <env key="GROOVY_HOME" path="${basedir}/bin/groovy"/>
-    <arg value="GroovyWrapper"/>
+    <arg value="UliGroovyWrapper"/>
     <arg value="-c"/>
     <arg value="-d"/>
     <arg value="${basedir}/uli-wsgen-${buildTag}.jar"/>
