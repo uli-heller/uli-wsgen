@@ -11,8 +11,9 @@ import javax.tools.StandardJavaFileManager;
 
 def cli = new CliBuilder(usage: "uli-wsgen.sh [-h] [-c classpath] interfaceName");
 cli.with {
-    h longOpt: 'help',                                        'Show usage information'
-    c longOpt: 'classpath',  args: 1, argName: 'classpath',   'Location of the input files'
+    h longOpt: 'help',                                             'Show usage information'
+    c longOpt: 'classpath',       args: 1, argName: 'classpath',   'Location of the input files'
+    t longOpt: 'targetNamespace', args: 1, argName: 'tns',         'Target namespace used in implementation class'
 }
 
 def printHelp = {
@@ -44,7 +45,7 @@ if (options.h) {
 String[] parsedArgs = options.arguments();
 if (parsedArgs.length != 1) {
   cli.usage();
-  System.err.println("Please specify only one interface name!");
+  System.err.println("Please specify exactly one interface name!");
   System.exit(1);
 }
 
@@ -58,6 +59,8 @@ if (options.c) {
   }
 }
 
+String targetNamespace = options.t ?: "";
+
 SourceInterface sourceInterface = new SourceInterface(className: parsedArgs[0], classLoader: cl);
 sourceInterface.check();
 
@@ -68,7 +71,7 @@ try {
 
   String implementationName = Implementation.getImplementationName(sourceInterface.getBaseName());
   String implementationClassName = Base.packageAndClassName(sourceInterface.getPackageName(), implementationName)
-  Implementation implementation = new Implementation(className: implementationClassName, topLevel: temporaryFolder, cleanup: cleanup, classPath: options.c);
+  Implementation implementation = new Implementation(className: implementationClassName, topLevel: temporaryFolder, cleanup: cleanup, classPath: options.c, targetNamespace: targetNamespace);
 
   String implClassText = implementation.getCode(sourceInterface);
   boolean fSuccess = implementation.compile(implClassText);
@@ -184,6 +187,7 @@ class Implementation extends Base {
   public File topLevel;
   public Cleanup cleanup;
   public String classPath;
+  public String targetNamespace;
 
   public void setTopLevel(File topLevel) {
     this.topLevel = topLevel;
@@ -231,13 +235,17 @@ class Implementation extends Base {
     if (this.isNotEmpty(pn)) {
       code.append("package ${pn};\n");
     }
+    code.append("@javax.jws.WebService(");
+    if (this.isNotEmpty(this.targetNamespace)) {
+      code.append("targetNamespace=\"${this.targetNamespace}\"");      
+    }
+    code.append(")\n");
     code.append("""
-      @javax.jws.WebService
       public class ${this.getImplementationName()} implements ${sourceInterface.className} {
     """);
     for (def m in sourceInterface.getMethods()) {
       code.append("\tpublic ${m.returnType.name} ${m.name}(");
-      int cnt=0; 
+      int cnt=0;
       code.append(m.parameterTypes.collect{ "${it.name} p${cnt++}" }.join(","));
       code.append(""") {
           throw new RuntimeException();

@@ -82,6 +82,14 @@ java.lang.ClassNotFoundException: com.daemonspoint.webservice.ComplexWebServiceI
 	at uliWsGen.run(uliWsGen.groovy:61)
 ```
 
+### CalculatorWsImpl
+
+```sh
+$ ./uli-wsgen*.sh -c build/classes -t my.target.namespace.de CalculatorWs
+$ ls *.wsdl
+CalculatorWsImplService.wsdl
+```
+
 ### Running on Windows
 
 On Windows, you should be able to run the programm with minor tweaks:
