@@ -60,7 +60,7 @@ if (!GROOVY_HOME.canRead()) {
 }
 
 ant.jar( destfile: destFile, compress: true, index: true ) {
-  fileset( dir: '.', includes: scriptBase + '*.class' )
+  fileset( dir: '.', includes: '*.class' )
 
   zipgroupfileset( dir: GROOVY_HOME, includes: 'embeddable/groovy-all-*.jar' )
   zipgroupfileset( dir: GROOVY_HOME, includes: 'lib/commons*.jar' )
