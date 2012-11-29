@@ -23,4 +23,4 @@ Closed TODOs
 * Implement a prototype for proof-of-concept
 * Make the prototype more robust
     * test against illegal classes/interfaces
-* Package the binaries - `ant dist` creates uli-wsgen*.jar
+* Package the binaries - `ant dist` creates uli-wsgen*.sh

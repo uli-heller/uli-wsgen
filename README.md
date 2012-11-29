@@ -51,7 +51,7 @@ Below, you'll find the commands to execute and the expected outcomes.
 ### SampleWebService
 
 ```sh
-$ java -jar uli-wsgen*.jar -c build/classes com.daemonspoint.webservice.SampleWebService
+$ ./uli-wsgen*.sh -c build/classes com.daemonspoint.webservice.SampleWebService
 $ ls *.wsdl
 SampleWebServiceImplService.wsdl
 ```
@@ -59,14 +59,14 @@ SampleWebServiceImplService.wsdl
 ### SampleWebServiceImpl
 
 ```sh
-$ java -jar uli-wsgen*.jar -c build/classes com.daemonspoint.webservice.SampleWebServiceImpl
+$ ./uli-wsgen*.sh -c build/classes com.daemonspoint.webservice.SampleWebServiceImpl
 Class 'com.daemonspoint.webservice.SampleWebServiceImpl' is not an interface - please use 'wsgen' directly
 ```
 
 ### ComplexWebService
 
 ```sh
-$ java -jar uli-wsgen*.jar -c build/classes com.daemonspoint.webservice.ComplexWebService
+$ ./uli-wsgen*.sh -c build/classes com.daemonspoint.webservice.ComplexWebService
 $ ls *.wsdl
 ComplexWebServiceImplService.wsdl
 ```
@@ -74,7 +74,7 @@ ComplexWebServiceImplService.wsdl
 ### ComplexWebServiceImpl
 
 ```sh
-$ java -jar uli-wsgen*.jar -c build/classes com.daemonspoint.webservice.ComplexWebServiceImpl
+$ ./uli-wsgen*.sh -c build/classes com.daemonspoint.webservice.ComplexWebServiceImpl
 Caught: java.lang.ClassNotFoundException: com.daemonspoint.webservice.ComplexWebServiceImpl
 java.lang.ClassNotFoundException: com.daemonspoint.webservice.ComplexWebServiceImpl
 	at SourceInterface.loadClass(uliWsGen.groovy:148)
