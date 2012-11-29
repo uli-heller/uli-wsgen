@@ -87,4 +87,9 @@ public interface ComplexWebService {
    public Out customObjects(
             @WebParam(name = "p0", mode = WebParam.Mode.IN) In i
    );
+
+   @WebMethod
+   public Date[] arrays(
+            @WebParam(name = "p0", mode = WebParam.Mode.IN) String[] inArray
+   );
 }

@@ -290,9 +290,9 @@ class Implementation extends Base {
       public class ${this.getImplementationName()} implements ${sourceInterface.className} {
     """);
     for (def m in sourceInterface.getMethods()) {
-      code.append("\tpublic ${m.returnType.name} ${m.name}(");
+      code.append("\tpublic ${toSourceCode(m.returnType)} ${m.name}(");
       int cnt=0;
-      code.append(m.parameterTypes.collect{ "${it.name} p${cnt++}" }.join(","));
+      code.append(m.parameterTypes.collect{ "${toSourceCode(it)} p${cnt++}" }.join(","));
       code.append(""") {
           throw new RuntimeException();
         }
@@ -300,6 +300,11 @@ class Implementation extends Base {
     }
     code.append("}\n");
     return code.toString();
+  }
+
+  private String toSourceCode(def type) {
+    //println "XX-${type.name} ${type.isArray()} ${type.canonicalName}\n${type.dump()}";
+    return type.canonicalName;
   }
 
   public boolean compile(String code) {
