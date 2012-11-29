@@ -9,7 +9,7 @@ import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
 import javax.tools.StandardJavaFileManager;
 
-def cli = new CliBuilder(usage: "uli-wsgen.sh [-h] [-c classpath] interfaceName");
+def cli = new CliBuilder(usage: "uli-wsgen.sh [-h] [-c classpath] interfaceName [--wsgen wsgen-opts ...]");
 cli.with {
     h longOpt: 'help',                                              'Show usage information'
     c longOpt: 'classpath',       args: 1, argName: 'classpath',    'Location of the input files'
@@ -22,7 +22,10 @@ cli.with {
 
 def printHelp = {
   cli.usage();
-  println "\nExamples:\n  uli-wsgen.sh -c build/classes com.daemonspoint.webservice.SampleWebService";
+  println """
+Examples:
+  uli-wsgen.sh -c build/classes com.daemonspoint.webservice.SampleWebService
+  uli-wsgen.sh -c build/classes CalculatorWs --wsgen -wsdl""";
   System.exit(0);
 }
 
@@ -34,6 +37,16 @@ def printHelp = {
     printHelp();
   }
 }
+
+// There is a mismatch between the parameter handling of 'wsgen' and CliBuilder.
+// For arguments after the interface name, this is true for CliBuilder:
+//    -- ... is filtered by CliBuilder
+//    -X ... is handled fine by CliBuilder
+//    -wsdl ... is translated to 'wsdl' by CliBuilder
+// In the end this means we have to access the raw parameters.
+List<String> argsList = args;
+int dashDashIndex = argsList.indexOf('--wsgen' as String);
+def wsgenArgs = dashDashIndex < 0 ? [] : argsList[(dashDashIndex+1)..-1];
 
 def options = cli.parse(args);
 
@@ -47,10 +60,17 @@ if (options.h) {
 }
 
 String[] parsedArgs = options.arguments();
-if (parsedArgs.length != 1) {
+if (parsedArgs.length < 1) {
   cli.usage();
-  System.err.println("Please specify exactly one interface name!");
+  System.err.println("Please specify an interface name!");
   System.exit(1);
+}
+if (parsedArgs.length > 1) {
+  if (!parsedArgs[1].startsWith('--wsgen')) {
+    cli.usage();
+    System.err.println("Please specify only one interface name!");
+    System.exit(1);
+  }
 }
 
 def additionalClasspath = [];
@@ -95,7 +115,10 @@ try {
     String cpForProcessBuilder = temporaryFolder.getAbsolutePath()\
        + File.pathSeparator\
        + options.c;
-    ProcessBuilder processBuilder = new ProcessBuilder("wsgen", "-cp", cpForProcessBuilder, "-wsdl", "-inlineSchemas", implementationClassName);
+    def additionalArgs = wsgenArgs ?:  [ "-wsdl", "-inlineSchemas" ];
+    def pbArgs = [ "wsgen", "-cp", cpForProcessBuilder, implementationClassName ];
+    pbArgs.addAll(additionalArgs);
+    ProcessBuilder processBuilder = new ProcessBuilder(pbArgs as List<String>);
     //processBuilder.directory(temporaryFolder);
     Process process = processBuilder.start();
     result = process.waitFor();
