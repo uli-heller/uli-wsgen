@@ -31,9 +31,13 @@
   <delete dir="build" />
   <delete dir="com" />
   <delete dir="dist" />
+  <delete dir="report" />
   <delete dir="bin/groovy" />
+  <delete dir="bin/wsdldiff" />
   <delete>
-    <fileset dir="." includes="**/*~" defaultexcludes="no">
+    <fileset dir="." defaultexcludes="no">
+      <include name="**/*~" />
+      <include name="**/*.class" />
     </fileset>
   </delete>
 </target>
