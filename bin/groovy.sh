@@ -10,6 +10,7 @@ fi
 CLASSPATH="${D}/../build/classes:${CLASSPATH}"
 export CLASSPATH
 
-GROOVY_DIR="${D}/groovy"
+GROOVY_HOME="${D}/groovy"
+export GROOVY_HOME
 
-exec "${GROOVY_DIR}/bin/groovy" "$@"
+exec "${GROOVY_HOME}/bin/groovy" "$@"
