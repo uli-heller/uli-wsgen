@@ -1,4 +1,4 @@
-<project name="uli-wsgen" default="compile">
+<project name="uli-wsgen" default="dist">
 
 <loadproperties>
   <file file="build.properties"/>
