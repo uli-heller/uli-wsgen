@@ -11,9 +11,13 @@ import javax.tools.StandardJavaFileManager;
 
 def cli = new CliBuilder(usage: "uli-wsgen.sh [-h] [-c classpath] interfaceName");
 cli.with {
-    h longOpt: 'help',                                             'Show usage information'
-    c longOpt: 'classpath',       args: 1, argName: 'classpath',   'Location of the input files'
-    t longOpt: 'targetNamespace', args: 1, argName: 'tns',         'Target namespace used in implementation class'
+    h longOpt: 'help',                                              'Show usage information'
+    c longOpt: 'classpath',       args: 1, argName: 'classpath',    'Location of the input files'
+    i longOpt: 'implClassName',   args: 1, argName: 'package.name', 'Name of the implementation class'
+    n longOpt: 'name',            args: 1, argName: 'name',         'Name annotation attribute used in implementation class'
+    p longOpt: 'portName',        args: 1, argName: 'name',         'Port name annotation attribute used in implementation class'
+    s longOpt: 'serviceName',     args: 1, argName: 'name',         'Service name annotation attribute used in implementation class [names the wsdl file]'
+    t longOpt: 'targetNamespace', args: 1, argName: 'tns',          'Target namespace annotation attribute used in implementation class'
 }
 
 def printHelp = {
@@ -59,7 +63,12 @@ if (options.c) {
   }
 }
 
-String targetNamespace = options.t ?: "";
+String implClassName       = options.i ?: "";
+String implName            = Base.getBaseName(implClassName);
+String name                = options.n ?: "";
+String portName            = options.p ?: "";
+String serviceName         = options.s ?: "";
+String targetNamespace     = options.t ?: "";
 
 SourceInterface sourceInterface = new SourceInterface(className: parsedArgs[0], classLoader: cl);
 sourceInterface.check();
@@ -69,9 +78,9 @@ Cleanup cleanup = new Cleanup();
 try {
   File temporaryFolder = Files.createTempDirectory("uliWsGen").toFile();
 
-  String implementationName = Implementation.getImplementationName(sourceInterface.getBaseName());
-  String implementationClassName = Base.packageAndClassName(sourceInterface.getPackageName(), implementationName)
-  Implementation implementation = new Implementation(className: implementationClassName, topLevel: temporaryFolder, cleanup: cleanup, classPath: options.c, targetNamespace: targetNamespace);
+  String implementationName = implName ?: Implementation.getImplementationName(sourceInterface.getBaseName());
+  String implementationClassName = implClassName ?: Base.packageAndClassName(sourceInterface.getPackageName(), implementationName)
+  Implementation implementation = new Implementation(className: implementationClassName, topLevel: temporaryFolder, cleanup: cleanup, classPath: options.c, name: name, portName: portName, serviceName: serviceName, targetNamespace: targetNamespace);
 
   String implClassText = implementation.getCode(sourceInterface);
   boolean fSuccess = implementation.compile(implClassText);
@@ -187,6 +196,9 @@ class Implementation extends Base {
   public File topLevel;
   public Cleanup cleanup;
   public String classPath;
+  public String name;
+  public String portName;
+  public String serviceName;
   public String targetNamespace;
 
   public void setTopLevel(File topLevel) {
@@ -199,7 +211,7 @@ class Implementation extends Base {
   }
 
   public String getImplementationName() {
-    return Implementation.getImplementationName(this.getBaseName());
+    return Base.getBaseName(this.className);
   }
 
   public String getImplementationNameDotClass() {
@@ -232,15 +244,26 @@ class Implementation extends Base {
   public String getCode(SourceInterface sourceInterface) {
     StringBuffer code = new StringBuffer(256);
     String pn = this.getPackageName();
+    def annotationArgs = [
+      name:            this.name,
+      portName:        this.portName,
+      serviceName:     this.serviceName,
+      targetNamespace: this.targetNamespace,
+    ];
+    def annotationList = [];
+    annotationArgs.keySet().each {
+      String value = annotationArgs.get(it);
+      if (this.isNotEmpty(value)) {
+        annotationList.add("${it}=\"${value}\"");
+      }
+    }
+
     if (this.isNotEmpty(pn)) {
       code.append("package ${pn};\n");
     }
-    code.append("@javax.jws.WebService(");
-    if (this.isNotEmpty(this.targetNamespace)) {
-      code.append("targetNamespace=\"${this.targetNamespace}\"");      
-    }
-    code.append(")\n");
     code.append("""
+      import ${sourceInterface.className};
+      @javax.jws.WebService(${annotationList.join(',')})
       public class ${this.getImplementationName()} implements ${sourceInterface.className} {
     """);
     for (def m in sourceInterface.getMethods()) {
@@ -305,6 +328,11 @@ class Base {
   public String getBaseName() {
     String name = this.tokenizedClassName[-1];
     return name;
+  }
+
+  static public String getBaseName(String packageAndClassName) {
+    String[] tokenized = packageAndClassName.tokenize('.') ?: [""];
+    return tokenized[-1];
   }
 
   public String getPackageName() {

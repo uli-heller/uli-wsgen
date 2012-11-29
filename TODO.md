@@ -7,11 +7,9 @@ List of Open TODOs
     * test against various web service interfaces (work in progress)
 * Port to Windows (work in progress)
 * Use ASM instead of JAVAC
-* Specify a service name via command line parameters
-    * for the service implementation class
-    * for the final execution of the wsgen command
 * Specify a port name via command line parameters
-    * for the service implementation class
+    * for the final execution of the wsgen command
+* Specify a service name via command line parameters
     * for the final execution of the wsgen command
 * Specify a target name space via command line parameters
     * for the final execution of the wsgen command
@@ -23,5 +21,9 @@ Closed TODOs
 * Make the prototype more robust
     * test against illegal classes/interfaces
 * Package the binaries - `ant dist` creates uli-wsgen*.sh
+* Specify a port name via command line parameters
+    * for the service implementation class
+* Specify a service name via command line parameters
+    * for the service implementation class
 * Specify a target name space via command line parameters
     * for the service implementation class
