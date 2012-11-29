@@ -1,5 +1,4 @@
 // http://docs.codehaus.org/display/GROOVY/WrappingGroovyScript
-// ... maybe I should replace this script by http://scottfrederick.blogspot.de/2011/11/wrapping-groovy-script-with-gradle.html
 /*
  * Copyright 2002-2007 the original author or authors.
  *
@@ -60,7 +59,7 @@ if (!GROOVY_HOME.canRead()) {
 }
 
 ant.jar( destfile: destFile, compress: true, index: true ) {
-  fileset( dir: '.', includes: '*.class' )
+  fileset( dir: '.', includes: scriptBase + '*.class' )
 
   zipgroupfileset( dir: GROOVY_HOME, includes: 'embeddable/groovy-all-*.jar' )
   zipgroupfileset( dir: GROOVY_HOME, includes: 'lib/commons*.jar' )
