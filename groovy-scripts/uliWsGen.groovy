@@ -9,7 +9,7 @@ import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
 import javax.tools.StandardJavaFileManager;
 
-def cli = new CliBuilder(usage: "uliWsGen [-h] [-c classpath] interfaceName");
+def cli = new CliBuilder(usage: "uli-wsgen.sh [-h] [-c classpath] interfaceName");
 cli.with {
     h longOpt: 'help',                                        'Show usage information'
     c longOpt: 'classpath',  args: 1, argName: 'classpath',   'Location of the input files'
@@ -17,7 +17,7 @@ cli.with {
 
 def printHelp = {
   cli.usage();
-  println "\nExamples:\n  examineInterface com.daemonspoint.webservice.SampleWebService";
+  println "\nExamples:\n  uli-wsgen.sh -c build/classes com.daemonspoint.webservice.SampleWebService";
   System.exit(0);
 }
 
