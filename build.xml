@@ -1,4 +1,8 @@
-<project name="mywsgen" default="compile">
+<project name="uli-wsgen" default="compile">
+
+<loadproperties>
+  <file file="build.properties"/>
+</loadproperties>
 
 <property name="classes" value="build/classes" />
 
@@ -38,8 +42,21 @@
     <fileset dir="." defaultexcludes="no">
       <include name="**/*~" />
       <include name="**/*.class" />
+      <include name="**/uli-wsgen*.jar" />
     </fileset>
   </delete>
+</target>
+
+<target name="dist">
+  <exec executable="${basedir}/bin/groovy/bin/groovy" dir="groovy-scripts">
+    <env key="GROOVY_HOME" path="${basedir}/bin/groovy"/>
+    <arg value="GroovyWrapper"/>
+    <arg value="-c"/>
+    <arg value="-d"/>
+    <arg value="${basedir}/uli-wsgen-${buildTag}.jar"/>
+    <arg value="-m"/>
+    <arg value="uliWsGen"/>
+  </exec>
 </target>
 
 <target name="lib" depends="groovy-lib">
