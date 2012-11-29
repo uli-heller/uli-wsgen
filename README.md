@@ -82,6 +82,22 @@ java.lang.ClassNotFoundException: com.daemonspoint.webservice.ComplexWebServiceI
 	at uliWsGen.run(uliWsGen.groovy:61)
 ```
 
+### Running on Windows
+
+On Windows, you should be able to run the programm with minor tweaks:
+
+* Replace "./uli-wsgen*.sh" by ".\uli-wsgen-{version}.bat", for example ".\uli-wsgen-0.1pre.bat"
+* Replace "/" by "\", so "build/classes" becomes "build\classes"
+* Use "dir" instead of "ls"
+
+An example looks like this:
+
+```bat
+> .\uli-wsgen-0.1pre.bat -c build\classes com.daemonspoint.webservice.ComplexWebService 
+> dir *.wsdl
+...
+```
+
 WSGEN - The Original
 --------------------
 

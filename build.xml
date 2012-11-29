@@ -48,6 +48,7 @@
       <include name="**/*.class" />
       <include name="**/uli-wsgen*.jar" />
       <include name="uli-wsgen*.sh" />
+      <include name="uli-wsgen*.bat" />
     </fileset>
   </delete>
 </target>
@@ -67,6 +68,10 @@
     <fileset dir="." includes="uli-wsgen-${buildTag}.jar"/>
   </concat>
   <chmod file="uli-wsgen-${buildTag}.sh" perm="a+x"/>
+  <copy file="scripts/dist.bat" tofile="uli-wsgen-${buildTag}.bat"/>
+  <concat append="true" binary="true" destfile="uli-wsgen-${buildTag}.bat">
+    <fileset dir="." includes="uli-wsgen-${buildTag}.jar"/>
+  </concat>
 </target>
 
 <target name="lib" depends="groovy-lib">

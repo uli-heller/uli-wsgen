@@ -5,7 +5,7 @@ List of Open TODOs
 * Make the prototype more robust
     * run without '-c'
     * test against various web service interfaces (work in progress)
-* Port to Windows
+* Port to Windows (work in progress)
 * Use ASM instead of JAVAC
 * Specify a service name via command line parameters
     * for the service implementation class
