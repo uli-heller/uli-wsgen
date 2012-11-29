@@ -1,4 +1,5 @@
 // http://docs.codehaus.org/display/GROOVY/WrappingGroovyScript
+// ... maybe I should replace this script by http://scottfrederick.blogspot.de/2011/11/wrapping-groovy-script-with-gradle.html
 /*
  * Copyright 2002-2007 the original author or authors.
  *
