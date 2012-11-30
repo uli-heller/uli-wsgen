@@ -90,6 +90,20 @@ $ ls *.wsdl
 CalculatorWsImplService.wsdl
 ```
 
+### InvalidAnnotation
+
+```sh
+$ ./uli-wsgen*.sh -c build/classes com.daemonspoint.webservice.InvalidAnnotation
+...
+Problem encountered during annotation processing; 
+see stacktrace below for more information.
+com.sun.tools.internal.ws.processor.modeler.ModelerException: modeler error: The @javax.jws.WebService.serviceName element cannot be specified on a service endpoint interface. Class: com.daemonspoint.webservice.InvalidAnnotation
+	at com.sun.tools.internal.ws.processor.modeler.annotation.WebServiceAP.onError(WebServiceAP.java:229)
+	at com.sun.tools.internal.ws.processor.modeler.annotation.WebServiceVisitor.verifySEIAnnotations(WebServiceVisitor.java:146)
+	at com.sun.tools.internal.ws.processor.modeler.annotation.WebServiceVisitor.visitInterfaceDeclaration(WebServiceVisitor.java:103)
+...
+```
+
 ### Running on Windows
 
 On Windows, you should be able to run the programm with minor tweaks:
@@ -284,3 +298,22 @@ return cw.toByteArray();
 }
 }
 ```
+
+Problems And Issues
+-------------------
+
+### ModelerException: The @javax.jws.WebService.serviceName element cannot be specified on a service endpoint interface
+
+There are chances that you get an error message like this:
+
+```
+com.sun.tools.internal.ws.processor.modeler.ModelerException: modeler error: The @javax.jws.WebService.serviceName element cannot be specified on a service endpoint interface. Class: com.daemonspoint.webservice.IllegalAnnotation
+	at com.sun.tools.internal.ws.processor.modeler.annotation.WebServiceAP.onError(WebServiceAP.java:229)
+	at com.sun.tools.internal.ws.processor.modeler.annotation.WebServiceVisitor.verifySEIAnnotations(WebServiceVisitor.java:146)
+	at com.sun.tools.internal.ws.processor.modeler.annotation.WebServiceVisitor.visitInterfaceDeclaration(WebServiceVisitor.java:103)
+	at com.sun.tools.apt.mirror.declaration.InterfaceDeclarationImpl.accept(InterfaceDeclarationImpl.java:50)
+	at com.sun.tools.internal.ws.processor.modeler.annotation.WebServiceVisitor.inspectEndpointInterface(WebServiceVisitor.java:408)
+...
+```
+
+This is an issue with the existing interface class of the web service. The interface class must *not* specify a serviceName within the @WebService annotation - see [reference](http://docs.oracle.com/javaee/5/api/javax/jws/WebService.html#serviceName()) for details!
