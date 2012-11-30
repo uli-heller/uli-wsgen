@@ -441,7 +441,7 @@ class Wsdl {
     if (Base.isNotEmpty(this.location)) {
       replaceList.add([ LOCATION, this.location ]);
     }
-    if (Base.isNotEmpty(this.finalXsdName)) {
+    if (Base.isNotEmpty(this.originalXsdName) && Base.isNotEmpty(this.finalXsdName)) {
       replaceList.add([ this.originalXsdName, this.finalXsdName ]);
     }
     return replaceList;
