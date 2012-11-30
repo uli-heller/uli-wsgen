@@ -16,7 +16,7 @@ Project Structure
     * prepare.sh ... downloads and unpacks the project dependencies
     * wsdldiff.sh ... wrapper for groovy-scripts/wsdlDiff.groovy
     * wsgen.sh ... wrapper for JDK wsgen
-    * uli-wsgen.sh ... wrapper for groovy-scripts/uliWsGen.groovy
+    * uli-wsgen.sh ... wrapper for groovy-scripts/uliWsGen.groovy used for rapid testing
 * build ... files generated when doing the compilation
     * classes ... compiled Java class files
 * groovy-scripts ... various groovy scripts

@@ -13,11 +13,13 @@ def cli = new CliBuilder(usage: "uli-wsgen.sh [-h] [-c classpath] interfaceName 
 cli.with {
     h longOpt: 'help',                                              'Show usage information'
     c longOpt: 'classpath',       args: 1, argName: 'classpath',    'Location of the input files'
+    f longOpt: 'filename',        args: 1, argName: 'filename',     'Name of the WSDL file to be created'
     i longOpt: 'implClassName',   args: 1, argName: 'package.name', 'Name of the implementation class'
+    l longOpt: 'location',        args: 1, argName: 'url',          'URL of the web service'
     n longOpt: 'name',            args: 1, argName: 'name',         'Name annotation attribute used in implementation class'
     p longOpt: 'portName',        args: 1, argName: 'name',         'Port name annotation attribute used in implementation class'
     s longOpt: 'serviceName',     args: 1, argName: 'name',         'Service name annotation attribute used in implementation class [names the wsdl file]'
-    t longOpt: 'targetNamespace', args: 1, argName: 'tns',          'Target namespace annotation attribute used in implementation class'
+    t longOpt: 'targetNamespace', args: 1, argName: 'tns',          'Target namespace annotation attribute used in implementation class [no effect]'
 }
 
 def printHelp = {
@@ -83,8 +85,10 @@ if (options.c) {
   }
 }
 
+String wsdlFilename        = options.f ?: "";
 String implClassName       = options.i ?: "";
 String implName            = Base.getBaseName(implClassName);
+String location            = options.l ?: "";
 String name                = options.n ?: "";
 String portName            = options.p ?: "";
 String serviceName         = options.s ?: "";
@@ -116,7 +120,7 @@ try {
        + File.pathSeparator\
        + options.c;
     def additionalArgs = wsgenArgs ?:  [ "-wsdl", "-inlineSchemas" ];
-    def pbArgs = [ "wsgen", "-cp", cpForProcessBuilder, implementationClassName ];
+    def pbArgs = [ "wsgen", "-r", temporaryFolder.getAbsolutePath(), "-cp", cpForProcessBuilder, implementationClassName ];
     pbArgs.addAll(additionalArgs);
     ProcessBuilder processBuilder = new ProcessBuilder(pbArgs as List<String>);
     //processBuilder.directory(temporaryFolder);
@@ -128,6 +132,8 @@ try {
       System.out.println("STDOUT:");
       System.out.println(process.getInputStream().getText());
     }
+    Wsdl wsdl = new Wsdl(sourceFolder: temporaryFolder, finalWsdlFilename: wsdlFilename, location: location);
+    wsdl.copy();
   }
 } finally {
   cleanup.cleanup();
@@ -299,6 +305,7 @@ class Implementation extends Base {
       """);
     }
     code.append("}\n");
+    //println code.toString();
     return code.toString();
   }
 
@@ -392,6 +399,86 @@ class Base {
   }
 }
 
+class Wsdl {
+  static public final String LOCATION="REPLACE_WITH_ACTUAL_URL";
+  static public final String WSDL_EXT=".wsdl";
+  static public final String XSD_EXT=".xsd";
+  public File sourceFolder;
+  public String finalWsdlFilename;
+  public String location;
+  String originalXsdName;
+  String finalXsdName;
+  File finalWsdlFile;
+  File finalXsdFile;
+
+  public void copy() {
+    File wsdlFile = null;
+    File xsdFile  = null;
+    sourceFolder.eachFileRecurse {
+      if (it =~ ~/\.wsdl$/) {
+        wsdlFile = it;
+      }
+      if (it =~ ~/\.xsd$/) {
+        xsdFile = it;
+        this.originalXsdName = xsdFile.getName();
+      }
+    }
+    if (Base.isEmpty(finalWsdlFilename)) {
+      finalWsdlFile = this.copyToDir(wsdlFile, ".", this.getReplaceList());
+      finalXsdFile = this.copyToDir(xsdFile, ".", []);
+    } else {
+      finalWsdlFile = new File(finalWsdlFilename);
+      File finalWsdlDir = finalWsdlFile.getParentFile() ?: new File(".");
+      finalXsdName = (finalWsdlFile.getName() - WSDL_EXT) + XSD_EXT;
+      finalXsdFile = new File(finalWsdlDir, finalXsdName);
+      this.copyToFile(wsdlFile, finalWsdlFile, this.getReplaceList());
+      this.copyToFile(xsdFile,  finalXsdFile, this.getReplaceList());
+    }
+  }
+
+  private def getReplaceList() {
+    def replaceList = [];
+    if (Base.isNotEmpty(this.location)) {
+      replaceList.add([ LOCATION, this.location ]);
+    }
+    if (Base.isNotEmpty(this.finalXsdName)) {
+      replaceList.add([ this.originalXsdName, this.finalXsdName ]);
+    }
+    return replaceList;
+  }
+
+  private String doReplace(String line, def replaceList) {
+    String result = line;
+    replaceList.each {
+      result = result.replaceAll(it[0], it[1]);
+    }
+    return result;
+  }
+
+  public File copyToDir(File src, String toDir, def replaceList) {
+    File toFile = null;
+    if (src != null) {
+      String name = src.getName();
+      toFile = new File(toDir, name);
+      copyToFile(src, toFile, replaceList);
+    }
+    return toFile;
+  }
+
+  public void copyToFile(File src, File dst, def replaceList) {
+    if (src != null) {
+      dst.setText("");
+      src.eachLine {String it ->
+        String line = doReplace(it, replaceList);
+        dst.append(line);
+        dst.append(System.lineSeparator); // Java7
+      }
+      //toFile << src.asWritable(); // http://groovyconsole.appspot.com/view.groovy?id=8001
+    }
+  }
+
+}
+
 class Cleanup {
   private List<File> filesAndFolders = new LinkedList<File>();
 
@@ -401,7 +488,11 @@ class Cleanup {
 
   public void cleanup() {
     for (File f in this.filesAndFolders.reverse()) {
-      f.delete();
+      if (f.isDirectory()) {
+        f.deleteDir();
+      } else {
+        f.delete();
+      }
     }
   }
 }
