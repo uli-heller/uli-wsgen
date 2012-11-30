@@ -1,4 +1,4 @@
 @java -jar %0 %*
-exit
+@exit /B
 
 EOF
