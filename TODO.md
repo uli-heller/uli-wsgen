@@ -24,3 +24,4 @@ Closed TODOs
 * Specify a target name space via command line parameters
     * for the service implementation class
     * for the final execution of the wsgen command
+* Web service parameters show up as arg0, arg1, ... within the wsdl

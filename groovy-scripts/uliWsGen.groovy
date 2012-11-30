@@ -274,6 +274,7 @@ class Implementation extends Base {
     StringBuffer code = new StringBuffer(256);
     String pn = this.getPackageName();
     def annotationArgs = [
+      endpointInterface: sourceInterface.className,
       name:            this.name,
       portName:        this.portName,
       serviceName:     this.serviceName,
