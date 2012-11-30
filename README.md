@@ -316,4 +316,4 @@ com.sun.tools.internal.ws.processor.modeler.ModelerException: modeler error: The
 ...
 ```
 
-This is an issue with the existing interface class of the web service. The interface class must *not* specify a serviceName within the @WebService annotation - see [reference](http://docs.oracle.com/javaee/5/api/javax/jws/WebService.html#serviceName()) for details!
+This is an issue with the existing interface class of the web service. The interface class must *not* specify a serviceName within the @WebService annotation - see [javaee reference documentation](http://docs.oracle.com/javaee/5/api/javax/jws/WebService.html#serviceName) for details!
