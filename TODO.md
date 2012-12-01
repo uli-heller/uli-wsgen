@@ -7,6 +7,9 @@ List of Open TODOs
     * test against various web service interfaces (work in progress)
 * Port to Windows (work in progress)
 * Use ASM instead of JAVAC
+    * What happens when we run uli-wsgen.sh on a JRE instead of a JDK?
+* Use XmlUnit to do the wsdldiff
+
 
 Closed TODOs
 ============

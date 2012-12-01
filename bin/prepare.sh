@@ -10,7 +10,7 @@ GROOVY_ZIP_ABSOLUTE_PATH="${D}/../3rd-party/${GROOVY_ZIP_BASENAME}"
 
 if [ ! -d "${D}/groovy" ]; then
   if [ ! -s  "${GROOVY_ZIP_ABSOLUTE_PATH}" ]; then
-    wget -c "${GROOVY_ZIP_DOWNLOAD_URL}" -O "${GROOVY_ZIP_ABSOLUTE_PATH}"
+    "${D}/httpcat.sh" "${GROOVY_ZIP_DOWNLOAD_URL}" >"${GROOVY_ZIP_ABSOLUTE_PATH}"
   fi
   (cd "${D}"; "${D}/myjar.sh" -xf "${GROOVY_ZIP_ABSOLUTE_PATH}")
   mv "${D}/groovy-${GROOVY_VERSION}" "${D}/groovy"
@@ -22,7 +22,7 @@ WSDLDIFF_ZIP_DOWNLOAD_URL="http://mirror.predic8.com/membrane/soa-model/${WSDLDI
 WSDLDIFF_ZIP_ABSOLUTE_PATH="${D}/../3rd-party/${WSDLDIFF_ZIP_BASENAME}"
 if [ ! -d "${D}/wsdldiff" ]; then
   if [ ! -s  "${WSDLDIFF_ZIP_ABSOLUTE_PATH}" ]; then
-    wget -c "${WSDLDIFF_ZIP_DOWNLOAD_URL}" -O "${WSDLDIFF_ZIP_ABSOLUTE_PATH}"
+    "${D}/httpcat.sh "${WSDLDIFF_ZIP_DOWNLOAD_URL}" >"${WSDLDIFF_ZIP_ABSOLUTE_PATH}"
   fi
   (cd "${D}"; mkdir wsdldiff; cd wsdldiff; "${D}/myjar.sh" -xf "${WSDLDIFF_ZIP_ABSOLUTE_PATH}")
 fi

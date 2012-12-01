@@ -49,7 +49,8 @@
     <fileset dir="." defaultexcludes="no">
       <include name="**/*~" />
       <include name="**/*.class" />
-      <include name="**/uli-wsgen*.jar" />
+        <include name="**/uli-wsgen*.jar" />
+        <include name="**/httpcat*.jar" />
       <include name="uli-wsgen*.sh" />
       <include name="uli-wsgen*.bat" />
     </fileset>
@@ -97,4 +98,23 @@
   </copy>
 </target>
 
+<target name="httpcat.jar" depends="compile">
+  <jar destfile="httpcat.jar" basedir="build/classes" includes="**/HttpCat.class">
+    <manifest>
+      <attribute name="Main-Class" value="com.daemonspoint.httpcat.HttpCat"/>
+    </manifest>
+  </jar>
+</target>
+
+<target name="httpcat" depends="httpcat.jar">
+  <copy file="scripts/dist.sh" tofile="bin/httpcat.sh"/>
+  <concat append="true" binary="true" destfile="bin/httpcat.sh">
+    <fileset dir="." includes="httpcat.jar"/>
+  </concat>
+  <chmod file="bin/httpcat.sh" perm="a+x"/>
+  <copy file="scripts/dist.bat" tofile="bin/httpcat.bat"/>
+  <concat append="true" binary="true" destfile="bin/httpcat.bat">
+    <fileset dir="." includes="httpcat.jar"/>
+  </concat>
+</target>
 </project>
