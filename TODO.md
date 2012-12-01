@@ -25,3 +25,4 @@ Closed TODOs
     * for the service implementation class
     * for the final execution of the wsgen command
 * Web service parameters show up as arg0, arg1, ... within the wsdl
+* Deadlock when "wsgen" creates lots of output

@@ -123,14 +123,10 @@ try {
     def pbArgs = [ "wsgen", "-r", temporaryFolder.getAbsolutePath(), "-cp", cpForProcessBuilder, implementationClassName ];
     pbArgs.addAll(additionalArgs);
     ProcessBuilder processBuilder = new ProcessBuilder(pbArgs as List<String>);
-    //processBuilder.directory(temporaryFolder);
-    Process process = processBuilder.start();
-    result = process.waitFor();
+    Executor executor = new Executor(processBuilder: processBuilder, temporaryFolder: temporaryFolder);
+    result = executor.execute(true);
     if (result != 0) {
-      System.err.println("STDERR:");
-      System.err.println(process.getErrorStream().getText());
-      System.out.println("STDOUT:");
-      System.out.println(process.getInputStream().getText());
+      System.exit(result);
     }
     Wsdl wsdl = new Wsdl(sourceFolder: temporaryFolder, finalWsdlFilename: wsdlFilename, location: location);
     wsdl.copy();
@@ -480,6 +476,47 @@ class Wsdl {
 
 }
 
+class Executor {
+  public ProcessBuilder processBuilder;
+  public File temporaryFolder;
+  private boolean fTemporaryFolderCreated = false;
+  public File stdout;
+  public File stderr;
+
+  public int execute(boolean fAutoMagic) {
+    Process process = processBuilder.start();
+    if (temporaryFolder == null) {
+      temporaryFolder = File.createTempFile();
+      boolean fSuccess = temporaryFolder.delete();
+      fSuccess = temporaryFolder.mkdir();
+      fTemporaryFolderCreated = true;
+    }
+    process.consumeProcessOutput(stdout, stderr);
+    int result = process.waitFor();
+    if (result != 0 && fAutoMagic) {
+      System.err.println("Process: ${processBuilder.command().join(' ')}");
+      System.err.println("Execution failed, exitCode=${result}");
+      System.err.println("\nSTDOUT:\n${stdout.getText()}\n");
+      System.err.println("\nSTDERR:\n${stderr.getText()}\n");
+    }
+    if (fAutoMagic) {
+      cleanup();
+    }
+    return result;
+  }
+
+  public void cleanup() {
+    Cleanup.delete(stdout);
+    Cleanup.delete(stderr);
+    stdout = null;
+    stdout = null;
+    if (fTemporaryFolderCreated) {
+      Cleanup.delete(temporaryFolder());
+      temporaryFolder = null;
+    }
+  }
+}
+
 class Cleanup {
   private List<File> filesAndFolders = new LinkedList<File>();
 
@@ -489,6 +526,12 @@ class Cleanup {
 
   public void cleanup() {
     for (File f in this.filesAndFolders.reverse()) {
+      delete(f);
+    }
+  }
+
+  static public void delete(File f) {
+    if (f != null) {
       if (f.isDirectory()) {
         f.deleteDir();
       } else {
