@@ -7,5 +7,5 @@ public class In {
     public int i;
     public Date d;
     public File f;
-    public Map m;
+    public Map<String, Date> m;
 }
