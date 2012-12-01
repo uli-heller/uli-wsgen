@@ -12,6 +12,7 @@ import javax.tools.StandardJavaFileManager;
 def cli = new CliBuilder(usage: "uli-wsgen.sh [-h] [-c classpath] interfaceName [--wsgen wsgen-opts ...]");
 cli.with {
     h longOpt: 'help',                                              'Show usage information'
+    d longOpt: 'debug',                                             'Print debug information'
     c longOpt: 'classpath',       args: 1, argName: 'classpath',    'Location of the input files'
     f longOpt: 'filename',        args: 1, argName: 'filename',     'Name of the WSDL file to be created'
     i longOpt: 'implClassName',   args: 1, argName: 'package.name', 'Name of the implementation class'
@@ -27,7 +28,7 @@ def printHelp = {
   println """
 Examples:
   uli-wsgen.sh -c build/classes com.daemonspoint.webservice.SampleWebService
-  uli-wsgen.sh -c build/classes CalculatorWs --wsgen -wsdl""";
+  uli-wsgen.sh -c build/classes -t http://example.de CalculatorWs --wsgen -wsdl""";
   System.exit(0);
 }
 
@@ -59,6 +60,14 @@ if (!options) {
 
 if (options.h) {
   printHelp();
+}
+
+boolean fDebug = options.d;
+
+def log = { String msg ->
+  if (fDebug) {
+    println msg;
+  }
 }
 
 String[] parsedArgs = options.arguments();
@@ -100,13 +109,14 @@ sourceInterface.check();
 int result=0;
 Cleanup cleanup = new Cleanup();
 try {
-  File temporaryFolder = Files.createTempDirectory("uliWsGen").toFile();
+  File temporaryFolder = Base.createTempDirectory();
 
   String implementationName = implName ?: Implementation.getImplementationName(sourceInterface.getBaseName());
   String implementationClassName = implClassName ?: Base.packageAndClassName(sourceInterface.getPackageName(), implementationName)
   Implementation implementation = new Implementation(className: implementationClassName, topLevel: temporaryFolder, cleanup: cleanup, classPath: options.c, name: name, portName: portName, serviceName: serviceName, targetNamespace: targetNamespace);
 
   String implClassText = implementation.getCode(sourceInterface);
+  log(implClassText);
   boolean fSuccess = implementation.compile(implClassText);
 
   if (!fSuccess) {
@@ -287,8 +297,10 @@ class Implementation extends Base {
     if (this.isNotEmpty(pn)) {
       code.append("package ${pn};\n");
     }
+    if (this.isNotEmpty(sourceInterface.packageName)) {
+      code.append("import ${sourceInterface.className};");
+    }
     code.append("""
-      import ${sourceInterface.className};
       @javax.jws.WebService(${annotationList.join(',')})
       public class ${this.getImplementationName()} implements ${sourceInterface.className} {
     """);
@@ -394,12 +406,26 @@ class Base {
   static public boolean isNotEmpty(String s) {
     return !(isEmpty(s));
   }
+
+  static public File createTempDirectory() {
+    File temporaryFolder = File.createTempFile("uli", "washere");
+    boolean fSuccess = temporaryFolder.delete();
+    if (!fSuccess) {
+      throw new IOException("Unable to delete file '${temporaryFolder.getAbsolutePath()}'");
+    }
+    fSuccess = temporaryFolder.mkdir();
+    if (!fSuccess) {
+      throw new IOException("Unable to create folder '${temporaryFolder.getAbsolutePath()}'");
+    }
+    return temporaryFolder;
+  }
 }
 
 class Wsdl {
   static public final String LOCATION="REPLACE_WITH_ACTUAL_URL";
   static public final String WSDL_EXT=".wsdl";
   static public final String XSD_EXT=".xsd";
+  static public final String LINE_SEPARATOR=System.getProperty("line.separator");
   public File sourceFolder;
   public String finalWsdlFilename;
   public String location;
@@ -468,12 +494,11 @@ class Wsdl {
       src.eachLine {String it ->
         String line = doReplace(it, replaceList);
         dst.append(line);
-        dst.append(System.lineSeparator); // Java7
+        dst.append(LINE_SEPARATOR);
       }
       //toFile << src.asWritable(); // http://groovyconsole.appspot.com/view.groovy?id=8001
     }
   }
-
 }
 
 class Executor {
@@ -486,12 +511,12 @@ class Executor {
   public int execute(boolean fAutoMagic) {
     Process process = processBuilder.start();
     if (temporaryFolder == null) {
-      temporaryFolder = File.createTempFile();
-      boolean fSuccess = temporaryFolder.delete();
-      fSuccess = temporaryFolder.mkdir();
+      temporaryFolder = Base.createTempDirectory();
       fTemporaryFolderCreated = true;
     }
-    process.consumeProcessOutput(stdout, stderr);
+    stdout = new File(temporaryFolder, "stdout");
+    stderr = new File(temporaryFolder, "stderr");
+    process.consumeProcessOutput(new FileOutputStream(stdout), new FileOutputStream(stderr));
     int result = process.waitFor();
     if (result != 0 && fAutoMagic) {
       System.err.println("Process: ${processBuilder.command().join(' ')}");
