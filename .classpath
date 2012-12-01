@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" output="classes" path="java"/>
+	<classpathentry kind="var" path="JRE_LIB" sourcepath="JRE_SRC"/>
+	<classpathentry kind="con" path="/home/uli/git/uli-wsgen/build/classes"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/ant-1.8.4.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/ant-antlr-1.8.4.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/ant-junit-1.8.4.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/ant-launcher-1.8.4.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/antlr-2.7.7.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/asm-4.0.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/asm-analysis-4.0.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/asm-commons-4.0.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/asm-tree-4.0.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/asm-util-4.0.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/bsf-2.4.0.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/commons-cli-1.2.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/gpars-1.0-beta-3.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/groovy-2.0.5.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/groovy-ant-2.0.5.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/groovy-bsf-2.0.5.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/groovy-console-2.0.5.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/groovy-docgenerator-2.0.5.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/groovy-groovydoc-2.0.5.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/groovy-groovysh-2.0.5.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/groovy-jmx-2.0.5.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/groovy-json-2.0.5.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/groovy-jsr223-2.0.5.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/groovy-servlet-2.0.5.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/groovy-sql-2.0.5.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/groovy-swing-2.0.5.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/groovy-templates-2.0.5.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/groovy-test-2.0.5.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/groovy-testng-2.0.5.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/groovy-xml-2.0.5.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/hamcrest-core-1.1.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/ivy-2.2.0.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/jansi-1.6.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/jcommander-1.12.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/jline-1.0.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/jsp-api-2.0.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/jsr166y-1.7.0.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/junit-4.10.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/qdox-1.12.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/servlet-api-2.4.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/testng-6.5.2.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/xmlpull-1.1.3.1.jar"/>
+	<classpathentry kind="lib" path="/home/uli/git/uli-wsgen/lib/xstream-1.4.2.jar"/>
+	<classpathentry kind="output" path="build/classes"/>
+</classpath>
