@@ -8,6 +8,8 @@ List of Open TODOs
 * Port to Windows (work in progress)
 * Use ASM instead of JAVAC
     * What happens when we run uli-wsgen.sh on a JRE instead of a JDK?
+        * JAVAC ... an exception
+        * GROOVYC ... works
 * Use XmlUnit to do the wsdldiff
 
 
@@ -29,3 +31,4 @@ Closed TODOs
     * for the final execution of the wsgen command
 * Web service parameters show up as arg0, arg1, ... within the wsdl
 * Deadlock when "wsgen" creates lots of output
+* Do compilation based on Groovyc - works with JRE

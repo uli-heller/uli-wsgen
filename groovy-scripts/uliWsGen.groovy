@@ -1,4 +1,5 @@
-import java.nio.file.Files; // ... available in Java7 only
+import org.codehaus.groovy.control.CompilerConfiguration;
+import org.codehaus.groovy.control.CompilationUnit;
 
 import java.lang.reflect.Method;
 
@@ -9,10 +10,11 @@ import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
 import javax.tools.StandardJavaFileManager;
 
-def cli = new CliBuilder(usage: "uli-wsgen.sh [-h] [-c classpath] interfaceName [--wsgen wsgen-opts ...]");
+def cli = new CliBuilder(usage: "uli-wsgen.sh [-h] [-d] [-j] [-c classpath] [-f wsdlfile] [-l url] [-p name] [-s name] [-t tns] interfaceName [--wsgen wsgen-opts ...]");
 cli.with {
     h longOpt: 'help',                                              'Show usage information'
     d longOpt: 'debug',                                             'Print debug information'
+    j longOpt: 'javac',                                             'Use java compiler instead of groovy compiler'
     c longOpt: 'classpath',       args: 1, argName: 'classpath',    'Location of the input files'
     f longOpt: 'filename',        args: 1, argName: 'filename',     'Name of the WSDL file to be created'
     i longOpt: 'implClassName',   args: 1, argName: 'package.name', 'Name of the implementation class'
@@ -63,6 +65,7 @@ if (options.h) {
 }
 
 boolean fDebug = options.d;
+boolean fJavac = options.j;
 
 def log = { String msg ->
   if (fDebug) {
@@ -113,7 +116,7 @@ try {
 
   String implementationName = implName ?: Implementation.getImplementationName(sourceInterface.getBaseName());
   String implementationClassName = implClassName ?: Base.packageAndClassName(sourceInterface.getPackageName(), implementationName)
-  Implementation implementation = new Implementation(className: implementationClassName, topLevel: temporaryFolder, cleanup: cleanup, classPath: options.c, name: name, portName: portName, serviceName: serviceName, targetNamespace: targetNamespace);
+  Implementation implementation = new Implementation(className: implementationClassName, topLevel: temporaryFolder, cleanup: cleanup, classPath: options.c, name: name, portName: portName, serviceName: serviceName, targetNamespace: targetNamespace, log: log, useJavac: fJavac);
 
   String implClassText = implementation.getCode(sourceInterface);
   log(implClassText);
@@ -128,7 +131,9 @@ try {
   } else {
     String cpForProcessBuilder = temporaryFolder.getAbsolutePath()\
        + File.pathSeparator\
-       + options.c;
+       + options.c\
+       + File.pathSeparator\
+       + System.getProperty("java.class.path");
     def additionalArgs = wsgenArgs ?:  [ "-wsdl", "-inlineSchemas" ];
     def pbArgs = [ "wsgen", "-r", temporaryFolder.getAbsolutePath(), "-cp", cpForProcessBuilder, implementationClassName ];
     pbArgs.addAll(additionalArgs);
@@ -235,6 +240,8 @@ class Implementation extends Base {
   public String portName;
   public String serviceName;
   public String targetNamespace;
+  public boolean useJavac = false;
+  public def log;
 
   public void setTopLevel(File topLevel) {
     this.topLevel = topLevel;
@@ -326,8 +333,16 @@ class Implementation extends Base {
   public boolean compile(String code) {
     this.createFolders();
     this.cleanup.add(this.getClassFile());
+    return useJavac ? this.compileJavac(code) : this.compileGroovyc(code);
+  }
+
+  private boolean compileJavac(String code) {
+    log("Using the javac compiler");
     // http://www.java2s.com/Code/Java/JDK-6/CompilingfromMemory.htm
     JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+    if (compiler == null) {
+      throw new NullPointerException("Unable to get an instance of the java compiler - please use a JDK (not a JRE)");
+    }
     StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
 
     JavaSourceFromString jsfs = new JavaSourceFromString(this.className, code);
@@ -344,6 +359,18 @@ class Implementation extends Base {
     boolean fSuccess = task.call();
     fileManager.close();
     return fSuccess;
+  }
+
+  private boolean compileGroovyc(String code) {
+    log("Using the groovyc compiler");
+    CompilerConfiguration compilerConfiguration = new CompilerConfiguration();
+    if (isNotEmpty(this.classPath)) {
+      compilerConfiguration.setClasspath(this.classPath);
+    }
+    compilerConfiguration.setTargetDirectory(this.topLevel);
+    GroovyClassLoader groovyClassLoader = new GroovyClassLoader(this.class.getClassLoader(), compilerConfiguration);
+    groovyClassLoader.parseClass(code); // throws an exception
+    return true;
   }
 }
 
