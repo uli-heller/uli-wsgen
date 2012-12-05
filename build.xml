@@ -25,7 +25,12 @@
   <pathelement location="bin/groovy/lib/*" />
 </path>
 
-<target name="compile" depends="lib, compile-java" />
+<target name="-prepare">
+  <exec executable="${basedir}/bin/prepare${EXT}" dir="${basedir}">
+  </exec>
+</target> <!-- -prepare -->
+
+<target name="compile" depends="-prepare, lib, compile-java" />
 
 <target name="compile-java">
   <mkdir dir="${classes}"/>
