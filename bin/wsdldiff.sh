@@ -7,10 +7,7 @@ if [ ! -d "${D}/wsdldiff" ]; then
   "${D}/prepare.sh"
 fi
 
-SOA_MODEL_HOME="${D}/wsdldiff"
-export SOA_MODEL_HOME
-
-CLASSPATH="${SOA_MODEL_HOME}/lib/*:${SOA_MODEL_HOME}/bin"
+CLASSPATH="${D}/../lib/*"
 export CLASSPATH
 
 exec "${D}/groovy.sh" "${D}/../groovy-scripts/wsdlDiff.groovy" "$@"

@@ -23,13 +23,15 @@ if [ ! -d "${D}/groovy" ]; then
   (cd "${D}/groovy/bin"; ls|grep -v "bat"|xargs chmod +x)
 fi
 
-WSDLDIFF_ZIP_BASENAME=soa-model-distribution-1.2.1.RC2.zip
-WSDLDIFF_ZIP_DOWNLOAD_URL="http://mirror.predic8.com/membrane/soa-model/${WSDLDIFF_ZIP_BASENAME}?"
-WSDLDIFF_ZIP_ABSOLUTE_PATH="${TPD}/${WSDLDIFF_ZIP_BASENAME}"
-if [ ! -d "${D}/wsdldiff" ]; then
-  if [ ! -s  "${WSDLDIFF_ZIP_ABSOLUTE_PATH}" ]; then
-    "${D}/httpcat.sh" "${WSDLDIFF_ZIP_DOWNLOAD_URL}" >"${WSDLDIFF_ZIP_ABSOLUTE_PATH}"
-  fi
-  (cd "${D}"; mkdir wsdldiff; cd wsdldiff; "${D}/myjar.sh" -xf "${WSDLDIFF_ZIP_ABSOLUTE_PATH}")
+WSDLDIFF_JAR_BASENAME=soa-model-core-1.2.1.uli02.jar
+WSDLDIFF_JAR_DOWNLOAD_URL="https://github.com/uli-heller/soa-model-core/raw/jars/${WSDLDIFF_JAR_BASENAME}"
+#WSDLDIFF_ZIP_DOWNLOAD_URL="http://mirror.predic8.com/membrane/soa-model/soa-model-distribution-1.2.1.RC2.zip"
+WSDLDIFF_JAR_ABSOLUTE_PATH="${TPD}/${WSDLDIFF_JAR_BASENAME}"
+if [ ! -s  "${WSDLDIFF_JAR_ABSOLUTE_PATH}" ]; then
+  "${D}/httpcat.sh" "${WSDLDIFF_JAR_DOWNLOAD_URL}" >"${WSDLDIFF_JAR_ABSOLUTE_PATH}"
 fi
+if [ ! -d "${D}/../lib" ]; then
+  mkdir "${D}/../lib"
+fi
+cp -u "${WSDLDIFF_JAR_ABSOLUTE_PATH}" "${D}/../lib/."
 exit 0
