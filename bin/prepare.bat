@@ -20,12 +20,12 @@ if exist "%D%\groovy" goto end_groovy
 set WSDLDIFF_JAR_BASENAME=soa-model-core-1.2.1.uli02.jar
 set WSDLDIFF_JAR_DOWNLOAD_URL=https://github.com/uli-heller/soa-model-core/raw/jars/%WSDLDIFF_JAR_BASENAME%
 :: set WSDLDIFF_ZIP_DOWNLOAD_URL="http://mirror.predic8.com/membrane/soa-model/soa-model-distribution-1.2.1.RC2.zip"
-set WSDLDIFF_JAR_ABSOLUTE_PATH=%TPD%%WSDLDIFF_JAR_BASENAME%
+set WSDLDIFF_JAR_ABSOLUTE_PATH=%TPD%\%WSDLDIFF_JAR_BASENAME%
 if exist "%WSDLDIFF_JAR_ABSOLUTE_PATH%" goto end_wsdldiff_download
   call "%D%\httpcat.bat" "%WSDLDIFF_JAR_DOWNLOAD_URL%" >"%WSDLDIFF_JAR_ABSOLUTE_PATH%"
 :end_wsdldiff_download
-if not exist "%D%..\lib" mkdir "%D%..\lib"
-copy "%WSDLDIFF_JAR_ABSOLUTE_PATH%" "%D%..lib\."
+if not exist "%D%..\lib" mkdir "%D%\..\lib"
+copy "%WSDLDIFF_JAR_ABSOLUTE_PATH%" "%D%\..\lib\."
 
 :end
 exit /B 0
