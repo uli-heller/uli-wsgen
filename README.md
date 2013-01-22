@@ -302,6 +302,13 @@ return cw.toByteArray();
 Problems And Issues
 -------------------
 
+### Unrecognized parameter -inlineSchemas
+
+This happens typically when you use Java6. It can be fixed by this:
+
+* Use Java7
+* Append "--wsgen -wsdl" to the command line parameters
+
 ### ModelerException: The @javax.jws.WebService.serviceName element cannot be specified on a service endpoint interface
 
 There are chances that you get an error message like this:
