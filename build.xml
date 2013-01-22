@@ -23,6 +23,7 @@
 <path id="classpath.groovy">
   <path refid="classpath.base" />
   <pathelement location="bin/groovy/lib/*" />
+  <pathelement location="bin/groovy/embeddable/*" />
 </path>
 
 <target name="-prepare">
@@ -109,6 +110,10 @@
   <copy todir="lib" flatten="true">
     <fileset dir="bin/groovy/lib">
       <include name="**/*.jar" />
+    </fileset>
+    <fileset dir="bin/groovy/embeddable">
+      <include name="**/*.jar" />
+      <exclude name="**/*-indy.jar" />
     </fileset>
   </copy>
 </target>
