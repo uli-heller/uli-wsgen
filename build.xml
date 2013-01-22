@@ -41,9 +41,17 @@
   </javac>
 </target>
 
+<target name="jar" depends="compile">
+ <jar destfile="lib/examples.jar" basedir="${classes}"/>
+</target>
+
 <target name="clean">
   <delete dir="tmp" />
-  <delete dir="lib" />
+  <delete>
+    <fileset dir="lib">
+      <exclude name="examples.jar"/>
+    </fileset>
+  </delete>
   <delete dir="build" />
   <delete dir="com" />
   <delete dir="dist" />
@@ -61,6 +69,8 @@
     </fileset>
   </delete>
 </target>
+
+<target name="all" depends="dist, jar"/>
 
 <target name="dist" depends="-unpack-groovy, compile">
   <exec executable="${basedir}/bin/groovy/bin/${GROOVY}" dir="groovy-scripts">

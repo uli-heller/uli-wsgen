@@ -1,3 +1,5 @@
+package com.daemonspoint.webservice;
+
 // http://openejb.apache.org/examples-trunk/simple-webservice/
 import javax.jws.WebService;
 

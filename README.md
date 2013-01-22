@@ -51,7 +51,7 @@ Below, you'll find the commands to execute and the expected outcomes.
 ### SampleWebService
 
 ```sh
-$ ./uli-wsgen*.sh -c build/classes com.daemonspoint.webservice.SampleWebService
+$ ./uli-wsgen*.sh -c lib/examples.jar com.daemonspoint.webservice.SampleWebService
 $ ls *.wsdl
 SampleWebServiceImplService.wsdl
 ```
@@ -59,14 +59,14 @@ SampleWebServiceImplService.wsdl
 ### SampleWebServiceImpl
 
 ```sh
-$ ./uli-wsgen*.sh -c build/classes com.daemonspoint.webservice.SampleWebServiceImpl
+$ ./uli-wsgen*.sh -c lib/examples.jar com.daemonspoint.webservice.SampleWebServiceImpl
 Class 'com.daemonspoint.webservice.SampleWebServiceImpl' is not an interface - please use 'wsgen' directly
 ```
 
 ### ComplexWebService
 
 ```sh
-$ ./uli-wsgen*.sh -c build/classes com.daemonspoint.webservice.ComplexWebService
+$ ./uli-wsgen*.sh -c lib/examples.jar com.daemonspoint.webservice.ComplexWebService
 $ ls *.wsdl
 ComplexWebServiceImplService.wsdl
 ```
@@ -74,7 +74,7 @@ ComplexWebServiceImplService.wsdl
 ### ComplexWebServiceImpl
 
 ```sh
-$ ./uli-wsgen*.sh -c build/classes com.daemonspoint.webservice.ComplexWebServiceImpl
+$ ./uli-wsgen*.sh -c lib/examples.jar com.daemonspoint.webservice.ComplexWebServiceImpl
 Caught: java.lang.ClassNotFoundException: com.daemonspoint.webservice.ComplexWebServiceImpl
 java.lang.ClassNotFoundException: com.daemonspoint.webservice.ComplexWebServiceImpl
 	at SourceInterface.loadClass(uliWsGen.groovy:148)
@@ -85,7 +85,7 @@ java.lang.ClassNotFoundException: com.daemonspoint.webservice.ComplexWebServiceI
 ### CalculatorWsImpl
 
 ```sh
-$ ./uli-wsgen*.sh -c build/classes -t my.target.namespace.de CalculatorWs
+$ ./uli-wsgen*.sh -c lib/examples.jar -t my.target.namespace.de com.daemonspoint.webservice.CalculatorWs
 $ ls *.wsdl
 CalculatorWsImplService.wsdl
 ```
@@ -93,7 +93,7 @@ CalculatorWsImplService.wsdl
 ### InvalidAnnotation
 
 ```sh
-$ ./uli-wsgen*.sh -c build/classes com.daemonspoint.webservice.InvalidAnnotation
+$ ./uli-wsgen*.sh -c lib/examples.jar com.daemonspoint.webservice.InvalidAnnotation
 ...
 Problem encountered during annotation processing; 
 see stacktrace below for more information.
@@ -115,7 +115,7 @@ On Windows, you should be able to run the programm with minor tweaks:
 An example looks like this:
 
 ```bat
-> .\uli-wsgen-0.1pre.bat -c build\classes com.daemonspoint.webservice.ComplexWebService 
+> .\uli-wsgen-0.1pre.bat -c lib\examples.jar com.daemonspoint.webservice.ComplexWebService 
 > dir *.wsdl
 ...
 ```

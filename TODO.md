@@ -11,7 +11,7 @@ List of Open TODOs
         * JAVAC ... an exception
         * GROOVYC ... works
 * Use XmlUnit to do the wsdldiff
-
+* Don't use '-inlineSchemas' for JDK6
 
 Closed TODOs
 ============
