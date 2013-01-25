@@ -1,7 +1,7 @@
 @echo off
 set D=%~pd0
 set TPD=%D%\..\3rd-party
-set GROOVY_VERSION=2.1.0-rc-3
+set GROOVY_VERSION=2.1.0
 set GROOVY_ZIP_BASENAME=groovy-binary-%GROOVY_VERSION%.zip
 set GROOVY_ZIP_ABSOLUTE_PATH=%TPD%\%GROOVY_ZIP_BASENAME%
 set GROOVY_ZIP_DOWNLOAD_URL=http://dist.groovy.codehaus.org/distributions/%GROOVY_ZIP_BASENAME%

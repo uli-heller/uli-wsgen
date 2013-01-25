@@ -5,7 +5,7 @@ D="$(cd "${D}"; pwd)"
 
 TPD="${D}/../3rd-party"
 
-GROOVY_VERSION="2.1.0-rc-3"
+GROOVY_VERSION="2.1.0"
 GROOVY_ZIP_BASENAME="groovy-binary-${GROOVY_VERSION}.zip"
 GROOVY_ZIP_DOWNLOAD_URL="http://dist.groovy.codehaus.org/distributions/${GROOVY_ZIP_BASENAME}"
 GROOVY_ZIP_ABSOLUTE_PATH="${TPD}/${GROOVY_ZIP_BASENAME}"
