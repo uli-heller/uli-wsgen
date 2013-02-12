@@ -1,7 +1,7 @@
 // This is a groovy script. You pass the name of a Java interface to it and the
 // script prints some attributes of the interface
 
-def cli = new CliBuilder(usage: "examineInterface [-h] interfaceName");
+def cli = new CliBuilder(usage: "examineInterface [-h] interfaceName", posix: true);
 cli.with {
     h longOpt: 'help',   'Show usage information'
     //f longOpt: 'from',   required: true, args: 1, argName: 'tmpWsdl',   'Name of the temporary wsdl file'

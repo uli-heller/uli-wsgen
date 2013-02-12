@@ -10,7 +10,7 @@ import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
 import javax.tools.StandardJavaFileManager;
 
-def cli = new CliBuilder(usage: "uli-wsgen.sh [-h] [-d] [-j] [-c classpath] [-f wsdlfile] [-l url] [-p name] [-s name] [-t tns] interfaceName [--wsgen wsgen-opts ...]");
+def cli = new CliBuilder(usage: "uli-wsgen.sh [-h] [-d] [-j] [-c classpath] [-f wsdlfile] [-l url] [-p name] [-s name] [-t tns] interfaceName [--wsgen wsgen-opts ...]", posix: true);
 cli.with {
     h longOpt: 'help',                                              'Show usage information'
     d longOpt: 'debug',                                             'Print debug information'

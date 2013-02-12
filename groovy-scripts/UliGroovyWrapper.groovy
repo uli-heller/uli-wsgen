@@ -19,7 +19,7 @@
 /**
  * Wrap a script and groovy jars to an executable jar
  */
-def cli = new CliBuilder()
+def cli = new CliBuilder(posix: true)
 cli.h( longOpt: 'help', required: false, 'show usage information' )
 cli.d( longOpt: 'destfile', argName: 'destfile', required: false, args: 1, 'jar destintation filename, defaults to {mainclass}.jar' )
 cli.m( longOpt: 'mainclass', argName: 'mainclass', required: true, args: 1, 'fully qualified main class, eg. HelloWorld' )
@@ -62,11 +62,11 @@ if (!GROOVY_HOME.canRead()) {
 ant.jar( destfile: destFile, compress: true, index: true ) {
   fileset( dir: '.', includes: '*.class' )
 
-  //zipgroupfileset( dir: GROOVY_HOME, includes: 'embeddable/groovy-all-*.jar' )
-  zipgroupfileset( dir: GROOVY_HOME, includes: 'lib/groovy-*.jar' )
+  zipgroupfileset( dir: GROOVY_HOME, includes: 'embeddable/groovy-all-*.jar' )
+  //zipgroupfileset( dir: GROOVY_HOME, includes: 'lib/groovy-*.jar' )
   zipgroupfileset( dir: GROOVY_HOME, includes: 'lib/commons*.jar' )
-  zipgroupfileset( dir: GROOVY_HOME, includes: 'lib/asm*.jar' )
-  zipgroupfileset( dir: GROOVY_HOME, includes: 'lib/antlr*.jar' )
+  //zipgroupfileset( dir: GROOVY_HOME, includes: 'lib/asm*.jar' )
+  //zipgroupfileset( dir: GROOVY_HOME, includes: 'lib/antlr*.jar' )
   // add more jars here
 
   manifest {
