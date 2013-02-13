@@ -97,17 +97,17 @@ if (options.c) {
   }
 }
 
+SourceInterface sourceInterface = new SourceInterface(className: parsedArgs[0], classLoader: cl);
+sourceInterface.check();
+
 String wsdlFilename        = options.f ?: "";
 String implClassName       = options.i ?: "";
 String implName            = Base.getBaseName(implClassName);
-String location            = options.l ?: "";
-String name                = options.n ?: "";
-String portName            = options.p ?: "";
-String serviceName         = options.s ?: "";
-String targetNamespace     = options.t ?: "";
-
-SourceInterface sourceInterface = new SourceInterface(className: parsedArgs[0], classLoader: cl);
-sourceInterface.check();
+String location            = options.l ?: sourceInterface.wsdlLocation();
+String targetNamespace     = options.t ?: sourceInterface.targetNamespace();
+String name                = options.n ?: ""; // sourceInterface.name() throws an exception!
+String portName            = options.p ?: sourceInterface.portName();
+String serviceName         = options.s ?: sourceInterface.serviceName();
 
 int result=0;
 Cleanup cleanup = new Cleanup();
@@ -149,7 +149,7 @@ try {
 } finally {
   cleanup.cleanup();
 }
-System.exit(result);
+return(result);
 
 // http://docs.oracle.com/javase/7/docs/api/javax/tools/JavaCompiler.html
 /**
@@ -179,6 +179,7 @@ class JavaSourceFromString extends SimpleJavaFileObject {
 class SourceInterface extends Base {
   public ClassLoader classLoader;
   Class clazz;
+  javax.jws.WebService webService;
 
   public boolean check() {
     //this.loadClass();
@@ -186,7 +187,7 @@ class SourceInterface extends Base {
       System.err.println("Class '${this.className}' could not be loaded - class not found!");
       System.exit(1);
     }
-    if (! isWebService(this.clazz)) {
+    if (! isWebService()) {
       System.err.println("Class '${this.className}' is not a jaxws webservice - annotation @WebService is missing");
       System.exit(1);
     }
@@ -210,15 +211,43 @@ class SourceInterface extends Base {
     ClassLoader cl = this.classLoader ?: this.getClass().getClassLoader();
     try {
       this.clazz = cl.loadClass(this.className);
+      this.webService = this.getWebServiceAnnotation(this.clazz);
     } catch (Exception e) {
       // ignore the exception - we *will* detect this later!
       ;
     }
   }
 
-  private boolean isWebService(Class clazz) {
-    javax.jws.WebService a = clazz.getAnnotation(javax.jws.WebService.class);
-    return a != null;
+  String wsdlLocation() {
+    return this.webService.wsdlLocation();
+  }
+
+  String targetNamespace() {
+    return this.webService.targetNamespace();
+  }
+
+  String name() {
+    return this.webService.name();
+  }
+
+  String endpointInterface() {
+    return this.webService.endpointInterface();
+  }
+
+  String portName() {
+    return this.webService.portName();
+  }
+
+  String serviceName() {
+    return this.webService.serviceName();
+  }
+
+  javax.jws.WebService getWebServiceAnnotation(Class clazz) {
+    return clazz.getAnnotation(javax.jws.WebService.class);
+  }
+
+  boolean isWebService() {
+    return null != this.webService;
   }
 
   public Method[] getMethods() {
