@@ -84,11 +84,13 @@
     <arg value="uliWsGen"/>
   </exec>
   <copy file="scripts/dist.sh" tofile="uli-wsgen-${buildTag}.sh"/>
+  <fixcrlf file="uli-wsgen-${buildTag}.sh" eol="unix" eof="remove"/>
   <concat append="true" binary="true" destfile="uli-wsgen-${buildTag}.sh">
     <fileset dir="." includes="uli-wsgen-${buildTag}.jar"/>
   </concat>
   <chmod file="uli-wsgen-${buildTag}.sh" perm="a+x"/>
   <copy file="scripts/dist.bat" tofile="uli-wsgen-${buildTag}.bat"/>
+  <fixcrlf file="uli-wsgen-${buildTag}.bat" eol="dos" eof="add"/>
   <concat append="true" binary="true" destfile="uli-wsgen-${buildTag}.bat">
     <fileset dir="." includes="uli-wsgen-${buildTag}.jar"/>
   </concat>
@@ -128,11 +130,13 @@
 
 <target name="httpcat" depends="httpcat.jar">
   <copy file="scripts/dist.sh" tofile="bin/httpcat.sh"/>
+  <fixcrlf file="bin/httpcat.sh" eol="unix" eof="remove"/>
   <concat append="true" binary="true" destfile="bin/httpcat.sh">
     <fileset dir="." includes="httpcat.jar"/>
   </concat>
   <chmod file="bin/httpcat.sh" perm="a+x"/>
   <copy file="scripts/dist.bat" tofile="bin/httpcat.bat"/>
+  <fixcrlf file="bin/httpcat.bat" eol="dos" eof="add"/>
   <concat append="true" binary="true" destfile="bin/httpcat.bat">
     <fileset dir="." includes="httpcat.jar"/>
   </concat>
