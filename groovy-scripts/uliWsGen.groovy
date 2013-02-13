@@ -106,8 +106,8 @@ String implName            = Base.getBaseName(implClassName);
 String location            = options.l ?: sourceInterface.wsdlLocation();
 String targetNamespace     = options.t ?: sourceInterface.targetNamespace();
 String name                = options.n ?: ""; // sourceInterface.name() throws an exception!
-String portName            = options.p ?: sourceInterface.portName();
-String serviceName         = options.s ?: sourceInterface.serviceName();
+String portName            = options.p ?: ""; // sourceInterface.portName() not allowed for interfaces
+String serviceName         = options.s ?: ""; // sourceInterface.serviceName() not allowed for interfaces
 
 int result=0;
 Cleanup cleanup = new Cleanup();
