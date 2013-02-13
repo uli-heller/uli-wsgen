@@ -73,8 +73,12 @@ def dumpAnnotations(Class clazz) {
   }
 }
 
+javax.jws.WebService getWebServiceAnnotation(Class clazz) {
+  return clazz.getAnnotation(javax.jws.WebService.class);
+}
+
 boolean isWebService(Class clazz) {
-  javax.jws.WebService a = clazz.getAnnotation(javax.jws.WebService.class);
+  javax.jws.WebService a = getWebServiceAnnotation(clazz);
   return a != null;
 }
 
@@ -83,7 +87,18 @@ for (String className in parsedArgs) {
   Class clazz = classLoader.loadClass(className);
   dumpMethods(clazz);
   dumpAnnotations(clazz);
-  println "This is ${isWebService(clazz) ? "" : "not "}a web service";
+  if (! isWebService(clazz)) {
+    println "This is NOT a web service";
+  } else {
+    println "This is a web service";
+    javax.jws.WebService ws = getWebServiceAnnotation(clazz);
+    println "  wsdlLocation=${ws.wsdlLocation()}";
+    println "  targetNamespace=${ws.targetNamespace()}";
+    println "  name=${ws.name()}";
+    println "  endpointInterface=${ws.endpointInterface()}";
+    println "  portName=${ws.portName()}";
+    println "  serviceName=${ws.serviceName()}";
+  }
 }
 
 System.exit(0);
