@@ -168,6 +168,47 @@ git remote add origin git@github.com:uli-heller/uli-wsgen.git
 git push -u origin master
 ```
 
+### Store Build Artifacts On GitHub
+
+```sh
+$ git checkout master
+$ git status
+# On branch master
+nothing to commit, working directory clean
+$ git checkout --orphan downloads
+$ git rm -rf .
+$ jmacs README.txt # Enter description of the branch
+$ git add README.txt
+$ git commit -m "Created branch: downloads"
+$ git push --set-upstream origin downloads
+$ cp .../uli-wsgen-0.1.bat .
+$ cp .../uli-wsgen-0.1.sh .
+$ git add uli-wsgen-0.1.bat uli-wsgen-0.1.sh
+$ git commit -m "Added downloads of version 0.1" .
+$ git push # might take some time depending on your internet connection bandwidth
+$ git checkout master # switch back to master
+```
+
+### Tags
+
+#### Create A Tag Locally
+
+```sh
+git tag -a -m "Version 0.1" v0.1
+```
+
+#### Push To GitHub
+
+```sh
+git push --tags
+```
+
+#### Fetch From GitHub
+
+```sh
+git fetch --tags
+```
+
 Third Party Products And Tools
 ------------------------------
 
