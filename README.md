@@ -5,6 +5,19 @@ Our goal is to implement a replacement for `wsgen -wsdl` which is able to create
 
 For third-party products we use, please see the corresponding section towards the end of this document!
 
+Cloning The GitHub Repo
+-----------------------
+
+To clone the GitHub repository of this project, it is probably best to run `git clone https://github.com/uli-heller/uli-wsgen.git --single-branch`. This prevents you from downloading the "downloads" branch which contains all the binaries created by this project.
+
+Requirements
+------------
+
+To compile and use this project, you'll need
+
+* Internet access to download various 3rd-party tools
+* Either JDK7 (preferred) or JDK6 installed and available via PATH
+
 Project Structure
 -----------------
 
@@ -343,12 +356,19 @@ return cw.toByteArray();
 Problems And Issues
 -------------------
 
+### STDERR: error reading ./uli-wsgen-0.1.sh; cannot read zip file entry
+
+This happens typically when you use Java6. It can be fixed by this:
+
+* EITHER: Use Java7
+* OR: Execute the jar file instead of the sh file, so use `java -jar uli-wsgen*jar ...` instead of `./uli-wsgen*sh ...`
+
 ### Unrecognized parameter -inlineSchemas
 
 This happens typically when you use Java6. It can be fixed by this:
 
-* Use Java7
-* Append "--wsgen -wsdl" to the command line parameters
+* EITHER: Use Java7
+* OR: Append "--wsgen -wsdl" to the command line parameters
 
 ### ModelerException: The @javax.jws.WebService.serviceName element cannot be specified on a service endpoint interface
 
