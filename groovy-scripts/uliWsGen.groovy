@@ -134,11 +134,15 @@ try {
        + options.c\
        + File.pathSeparator\
        + System.getProperty("java.class.path");
-    def additionalArgs = wsgenArgs ?:  [ "-wsdl", "-inlineSchemas" ];
-    def pbArgs = [ "wsgen", "-r", temporaryFolder.getAbsolutePath(), "-cp", cpForProcessBuilder, implementationClassName ];
-    pbArgs.addAll(additionalArgs);
-    ProcessBuilder processBuilder = new ProcessBuilder(pbArgs as List<String>);
-    Executor executor = new Executor(processBuilder: processBuilder, temporaryFolder: temporaryFolder);
+    WsGen wsgen = new WsGen();
+    def defaultWsGenArgs = [ "-wsdl" ];
+    if (WsGen.canInlineSchemas()) {
+	defaultWsGenArgs = [ "-wsdl", "-inlineSchemas" ];
+    }
+    def additionalArgs = wsgenArgs ?: defaultWsGenArgs;
+    wsgen.setArgs([ "-r", temporaryFolder.getAbsolutePath(), "-cp", cpForProcessBuilder, implementationClassName ]);
+    wsgen.addArgs(additionalArgs);
+    Executor executor = wsgen.getExecutor();
     result = executor.execute(true);
     if (result != 0) {
       System.exit(result);
@@ -592,9 +596,49 @@ class Executor {
     stdout = null;
     stdout = null;
     if (fTemporaryFolderCreated) {
-      Cleanup.delete(temporaryFolder());
+      Cleanup.delete(temporaryFolder);
       temporaryFolder = null;
     }
+  }
+
+  public String getStdout() {
+    return stdout.getText();
+  }
+  public String getStderr() {
+    return stderr.getText();
+  }
+}
+
+class WsGen {
+  def args = [];
+
+  public WsGen() {
+    this.setArgs([]);
+  }
+
+  public void setArgs(List args) {
+    this.args = [ 'wsgen' ];
+    this.addArgs(args);
+  }
+
+  public void addArgs(List args) {
+    this.args.addAll(args);
+  }
+
+  public Executor getExecutor() {
+    ProcessBuilder processBuilder = new ProcessBuilder(this.args as List<String>);
+    Executor executor = new Executor(processBuilder: processBuilder);
+    return executor;
+  }
+
+  public static boolean canInlineSchemas() {
+    WsGen wsgen = new WsGen();
+    Executor e = wsgen.getExecutor();
+    e.execute(false);
+    String output = e.getStdout() + e.getStderr();
+    boolean result = output.indexOf('inlineSchemas') >= 0;
+    e.cleanup();
+    return result;
   }
 }
 
