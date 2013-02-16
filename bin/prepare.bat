@@ -27,5 +27,15 @@ if exist "%WSDLDIFF_JAR_ABSOLUTE_PATH%" goto end_wsdldiff_download
 if not exist "%D%..\lib" mkdir "%D%\..\lib"
 copy "%WSDLDIFF_JAR_ABSOLUTE_PATH%" "%D%\..\lib\."
 
+set JAXWSTOOLS_VERSION=2.2.7
+set JAXWSTOOLS_JAR_BASENAME=jaxws-tools-%JAXWSTOOLS_VERSION%.jar
+set JAXWSTOOLS_JAR_DOWNLOAD_URL=http://repo1.maven.org/maven2/com/sun/xml/ws/jaxws-tools/%JAXWSTOOLS_VERSION%/%JAXWSTOOLS_JAR_BASENAME%
+:: set JAXWSTOOLS_ZIP_DOWNLOAD_URL="http://mirror.predic8.com/membrane/soa-model/soa-model-distribution-1.2.1.RC2.zip"
+set JAXWSTOOLS_JAR_ABSOLUTE_PATH=%TPD%\%JAXWSTOOLS_JAR_BASENAME%
+if exist "%JAXWSTOOLS_JAR_ABSOLUTE_PATH%" goto end_jaxwstools_download
+  call "%D%\httpcat.bat" "%JAXWSTOOLS_JAR_DOWNLOAD_URL%" >"%JAXWSTOOLS_JAR_ABSOLUTE_PATH%"
+:end_jaxwstools_download
+if not exist "%D%..\lib" mkdir "%D%\..\lib"
+copy "%JAXWSTOOLS_JAR_ABSOLUTE_PATH%" "%D%\..\lib\."
 :end
 exit /B 0
