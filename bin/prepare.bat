@@ -27,15 +27,17 @@ if exist "%WSDLDIFF_JAR_ABSOLUTE_PATH%" goto end_wsdldiff_download
 if not exist "%D%..\lib" mkdir "%D%\..\lib"
 copy "%WSDLDIFF_JAR_ABSOLUTE_PATH%" "%D%\..\lib\."
 
-set JAXWSTOOLS_VERSION=2.2.7
-set JAXWSTOOLS_JAR_BASENAME=jaxws-tools-%JAXWSTOOLS_VERSION%.jar
-set JAXWSTOOLS_JAR_DOWNLOAD_URL=http://repo1.maven.org/maven2/com/sun/xml/ws/jaxws-tools/%JAXWSTOOLS_VERSION%/%JAXWSTOOLS_JAR_BASENAME%
-:: set JAXWSTOOLS_ZIP_DOWNLOAD_URL="http://mirror.predic8.com/membrane/soa-model/soa-model-distribution-1.2.1.RC2.zip"
-set JAXWSTOOLS_JAR_ABSOLUTE_PATH=%TPD%\%JAXWSTOOLS_JAR_BASENAME%
-if exist "%JAXWSTOOLS_JAR_ABSOLUTE_PATH%" goto end_jaxwstools_download
-  call "%D%\httpcat.bat" "%JAXWSTOOLS_JAR_DOWNLOAD_URL%" >"%JAXWSTOOLS_JAR_ABSOLUTE_PATH%"
-:end_jaxwstools_download
+set JAXWSRI_VERSION=2.2.7
+set JAXWSRI_ZIP_BASENAME=jaxws-tools-%JAXWSRI_VERSION%.jar
+set JAXWSRI_ZIP_DOWNLOAD_URL=http://repo1.maven.org/maven2/com/sun/xml/ws/jaxws-ri/%JAXWSRI_VERSION%/%JAXWSRI_ZIP_BASENAME%
+set JAXWSRI_ZIP_ABSOLUTE_PATH=%TPD%\%JAXWSRI_ZIP_BASENAME%
+if exist "%JAXWSRI_ZIP_ABSOLUTE_PATH%" goto end_jaxwsri_download
+  call "%D%\httpcat.bat" "%JAXWSRI_ZIP_DOWNLOAD_URL%" >"%JAXWSRI_ZIP_ABSOLUTE_PATH%"
+:end_jaxwsri_download
 if not exist "%D%..\lib" mkdir "%D%\..\lib"
-copy "%JAXWSTOOLS_JAR_ABSOLUTE_PATH%" "%D%\..\lib\."
+if exist "%D%..\lib\jaxws-tools.jar" goto end
+  call "%D%\myjar.bat" -xf "%JAXWSRI_ZIP_ABSOLUTE_PATH%"
+  copy jaxws-ri\lib\*.jar "%D%..\lib" >NUL
+  rmdir /Q /S jaxws-ri >NUL
 :end
 exit /B 0

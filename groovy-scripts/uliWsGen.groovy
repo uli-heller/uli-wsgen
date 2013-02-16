@@ -1,7 +1,10 @@
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.CompilationUnit;
 
+import com.sun.tools.ws.WsGen;
+
 import java.lang.reflect.Method;
+import java.security.Permission;
 
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
@@ -561,33 +564,29 @@ class Wsdl {
   }
 }
 
-class Executor {
-  public ProcessBuilder processBuilder;
+
+interface Executor {
+  public int execute(boolean fAutoMagic);
+  public void cleanup();
+  public String getStdoutText();
+  public String getStderrText();
+  public String getDiagnostics(String command, int result);
+}
+
+abstract class AbstractExecutor {
+  public List<String> args;
   public File temporaryFolder;
   private boolean fTemporaryFolderCreated = false;
   public File stdout;
   public File stderr;
 
-  public int execute(boolean fAutoMagic) {
-    Process process = processBuilder.start();
+  public void initTemporaryFolder() {
     if (temporaryFolder == null) {
       temporaryFolder = Base.createTempDirectory();
       fTemporaryFolderCreated = true;
     }
     stdout = new File(temporaryFolder, "stdout");
     stderr = new File(temporaryFolder, "stderr");
-    process.consumeProcessOutput(new FileOutputStream(stdout), new FileOutputStream(stderr));
-    int result = process.waitFor();
-    if (result != 0 && fAutoMagic) {
-      System.err.println("Process: ${processBuilder.command().join(' ')}");
-      System.err.println("Execution failed, exitCode=${result}");
-      System.err.println("\nSTDOUT:\n${stdout.getText()}\n");
-      System.err.println("\nSTDERR:\n${stderr.getText()}\n");
-    }
-    if (fAutoMagic) {
-      cleanup();
-    }
-    return result;
   }
 
   public void cleanup() {
@@ -601,11 +600,97 @@ class Executor {
     }
   }
 
-  public String getStdout() {
+  public String getStdoutText() {
     return stdout.getText();
   }
-  public String getStderr() {
+  public String getStderrText() {
     return stderr.getText();
+  }
+  public String getDiagnostics(String command, int result) {
+      System.err.println("Command: ${command}, Args: ${this.args.join(' ')}");
+      System.err.println("Execution failed, exitCode=${result}");
+      System.err.println("\nSTDOUT:\n${this.getStdoutText()}\n");
+      System.err.println("\nSTDERR:\n${this.getStderrText()}\n");
+  }
+}
+
+class ExternalExecutor extends AbstractExecutor implements Executor {
+  public int execute(boolean fAutoMagic) {
+    List<String> tmpArgs = [ 'wsgen' ];
+    tmpArgs.addAll(this.args);
+    ProcessBuilder processBuilder = new ProcessBuilder(tmpArgs as List<String>);
+    Process process = processBuilder.start();
+    this.initTemporaryFolder();
+    process.consumeProcessOutput(new FileOutputStream(stdout), new FileOutputStream(stderr));
+    int result = process.waitFor();
+    if (result != 0 && fAutoMagic) {
+      System.err.println(this.getDiagnostics("External WSGEN", result));
+    }
+    if (fAutoMagic) {
+      cleanup();
+    }
+    return result;
+  }
+
+}
+
+class InternalExecutor extends AbstractExecutor implements Executor {
+  private class ExitException extends SecurityException {
+     public final int status;
+     public ExitException(int status) {
+         super("There is no escape!");
+         this.status = status;
+     }
+  }
+
+  private class NoExitSecurityManager extends SecurityManager {
+    @Override
+    public void checkPermission(Permission perm) {
+        // allow anything.
+    }
+    @Override
+    public void checkPermission(Permission perm, Object context) {
+        // allow anything.
+    }
+    @Override
+    public void checkExit(int status) {
+        super.checkExit(status);
+        throw new ExitException(status);
+    }
+  }
+
+  public int execute(boolean fAutoMagic) {
+    initTemporaryFolder();
+    PrintStream pStdout = new PrintStream(new FileOutputStream(stdout));
+    PrintStream pStderr = new PrintStream(new FileOutputStream(stderr));
+    PrintStream oldOut = System.out;
+    System.out = pStdout;
+    PrintStream oldErr = System.err;
+    System.err = pStderr;
+    SecurityManager sm = System.getSecurityManager();
+    int result = 0;
+    try {
+      System.setSecurityManager(new NoExitSecurityManager());
+      com.sun.tools.ws.WsGen.main(args as String[]);
+    } catch (ExitException e) {
+      result = e.status;
+    } catch (Throwable e) {
+      e.printStackTrace(oldErr);
+    } finally {
+      System.setSecurityManager(sm);
+      System.out = oldOut;
+      System.err = oldErr;
+      pStdout.close();
+      pStderr.close();
+    }
+
+    if (result != 0 && fAutoMagic) {
+      System.err.println(this.getDiagnostics("Internal WSGEN", result));
+    }
+    if (fAutoMagic) {
+      cleanup();
+    }
+    return result;
   }
 }
 
@@ -613,11 +698,11 @@ class WsGen {
   def args = [];
 
   public WsGen() {
-    this.setArgs([]);
+    this.setArgs(['-help']);
   }
 
   public void setArgs(List args) {
-    this.args = [ 'wsgen' ];
+    this.args = [  ];
     this.addArgs(args);
   }
 
@@ -626,8 +711,7 @@ class WsGen {
   }
 
   public Executor getExecutor() {
-    ProcessBuilder processBuilder = new ProcessBuilder(this.args as List<String>);
-    Executor executor = new Executor(processBuilder: processBuilder);
+    Executor executor = new InternalExecutor(args: this.args as List<String>);
     return executor;
   }
 
@@ -635,7 +719,7 @@ class WsGen {
     WsGen wsgen = new WsGen();
     Executor e = wsgen.getExecutor();
     e.execute(false);
-    String output = e.getStdout() + e.getStderr();
+    String output = e.getStdoutText() + e.getStderrText();
     boolean result = output.indexOf('inlineSchemas') >= 0;
     e.cleanup();
     return result;

@@ -7,7 +7,7 @@ if [ ! -d "${D}/groovy" ]; then
   "${D}/prepare.sh"
 fi
 
-CLASSPATH="${D}/../build/classes:${CLASSPATH}"
+CLASSPATH="${D}/../build/classes:${D}/../lib/*:${CLASSPATH}"
 export CLASSPATH
 
 GROOVY_HOME="${D}/groovy"

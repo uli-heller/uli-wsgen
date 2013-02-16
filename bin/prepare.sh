@@ -35,16 +35,19 @@ if [ ! -d "${D}/../lib" ]; then
 fi
 cp -u "${WSDLDIFF_JAR_ABSOLUTE_PATH}" "${D}/../lib/."
 
-JAXWSTOOLS_VERSION="2.2.7"
-JAXWSTOOLS_JAR_BASENAME="jaxws-tools-${JAXWSTOOLS_VERSION}.jar"
-JAXWSTOOLS_JAR_DOWNLOAD_URL="http://repo1.maven.org/maven2/com/sun/xml/ws/jaxws-tools/${JAXWSTOOLS_VERSION}/${JAXWSTOOLS_JAR_BASENAME}"
-JAXWSTOOLS_JAR_ABSOLUTE_PATH="${TPD}/${JAXWSTOOLS_JAR_BASENAME}"
-if [ ! -s  "${JAXWSTOOLS_JAR_ABSOLUTE_PATH}" ]; then
-  "${D}/httpcat.sh" "${JAXWSTOOLS_JAR_DOWNLOAD_URL}" >"${JAXWSTOOLS_JAR_ABSOLUTE_PATH}"
+JAXWSRI_VERSION="2.2.7"
+JAXWSRI_ZIP_BASENAME="jaxws-ri-${JAXWSRI_VERSION}.zip"
+JAXWSRI_ZIP_DOWNLOAD_URL="http://repo1.maven.org/maven2/com/sun/xml/ws/jaxws-ri/${JAXWSRI_VERSION}/${JAXWSRI_ZIP_BASENAME}"
+JAXWSRI_ZIP_ABSOLUTE_PATH="${TPD}/${JAXWSRI_ZIP_BASENAME}"
+if [ ! -s  "${JAXWSRI_ZIP_ABSOLUTE_PATH}" ]; then
+  "${D}/httpcat.sh" "${JAXWSRI_ZIP_DOWNLOAD_URL}" >"${JAXWSRI_ZIP_ABSOLUTE_PATH}"
 fi
 if [ ! -d "${D}/../lib" ]; then
   mkdir "${D}/../lib"
 fi
-cp -u "${JAXWSTOOLS_JAR_ABSOLUTE_PATH}" "${D}/../lib/."
+if [ ! -s "${D}/../lib/jaxws-tools.jar" ]; then
+  (cd "${D}/../lib"; "${D}/myjar.sh" -xf "${JAXWSRI_ZIP_ABSOLUTE_PATH}")
+  mv "${D}/../lib/jaxws-ri/lib/"*.jar "${D}/../lib/."
+fi
 
 exit 0

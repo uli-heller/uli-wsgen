@@ -68,6 +68,14 @@ ant.jar( destfile: destFile, compress: true, index: true ) {
   //zipgroupfileset( dir: GROOVY_HOME, includes: 'lib/asm*.jar' )
   //zipgroupfileset( dir: GROOVY_HOME, includes: 'lib/antlr*.jar' )
   // add more jars here
+  zipgroupfileset( dir: '../lib', includes: '**/jaxws-tools.jar');
+  zipgroupfileset( dir: '../lib', includes: '**/jaxws-rt.jar');
+  zipgroupfileset( dir: '../lib', includes: '**/jaxb-xjc.jar');
+  zipgroupfileset( dir: '../lib', includes: '**/jaxb-impl.jar');
+  zipgroupfileset( dir: '../lib', includes: '**/streambuffer.jar');
+  zipgroupfileset( dir: '../lib', includes: '**/policy.jar');
+  zipgroupfileset( dir: '../lib', includes: '**/stax2-api.jar');
+  zipgroupfileset( dir: '../lib', includes: '**/stax-ex.jar');
 
   manifest {
     attribute( name: 'Main-Class', value: mainClass )

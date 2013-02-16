@@ -7,7 +7,7 @@
 <condition property="EXT" value=".bat" else=".sh">
   <os family="windows"/>
 </condition>
-<condition property="GROOVY" value="groovy.bat" else="groovy">
+<condition property="GROOVY" value="groovy.bat" else="groovy.sh">
   <os family="windows"/>
 </condition>
 
@@ -74,7 +74,7 @@
 <target name="all" depends="dist, jar"/>
 
 <target name="dist" depends="-unpack-groovy, compile">
-  <exec executable="${basedir}/bin/groovy/bin/${GROOVY}" dir="groovy-scripts">
+  <exec executable="${basedir}/bin/${GROOVY}" dir="groovy-scripts">
     <env key="GROOVY_HOME" path="${basedir}/bin/groovy"/>
     <arg value="UliGroovyWrapper"/>
     <arg value="-c"/>
