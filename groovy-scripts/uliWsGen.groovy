@@ -140,7 +140,7 @@ try {
     WsGen wsgen = new WsGen();
     def defaultWsGenArgs = [ "-wsdl" ];
     if (WsGen.canInlineSchemas()) {
-	defaultWsGenArgs = [ "-wsdl", "-inlineSchemas" ];
+	defaultWsGenArgs << "-inlineSchemas";
     }
     def additionalArgs = wsgenArgs ?: defaultWsGenArgs;
     wsgen.setArgs([ "-r", temporaryFolder.getAbsolutePath(), "-cp", cpForProcessBuilder, implementationClassName ]);
@@ -695,6 +695,18 @@ class InternalExecutor extends AbstractExecutor implements Executor {
 }
 
 class WsGen {
+  /*
+   * For jaxws-ri-2.2.7, we have to specify '-target' '2.1'. Without these options,
+   * an error message like this is shown:
+   *
+   *   You are running on JDK6 which comes with JAX-WS 2.1 API, but this tool
+   *   requires JAX-WS 2.2 API. Use the endorsed standards override mechanism
+   *   (http://docs.oracle.com/javase/6/docs/technotes/guides/standards/),
+   *    or use -Xendorsed option.
+   *
+   * The option seems to work with the WSGEN provided by JDK6 as well.
+   */
+  static final def REQUIRED_ARGS = [ '-target', '2.1' ];
   def args = [];
 
   public WsGen() {
@@ -711,7 +723,10 @@ class WsGen {
   }
 
   public Executor getExecutor() {
-    Executor executor = new InternalExecutor(args: this.args as List<String>);
+    def myArgs = [];
+    myArgs += REQUIRED_ARGS;
+    myArgs += this.args;
+    Executor executor = new InternalExecutor(args: myArgs as List<String>);
     return executor;
   }
 

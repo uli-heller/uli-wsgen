@@ -16,6 +16,9 @@ Requirements
 To compile and use this project, you'll need
 
 * Internet access to download various 3rd-party tools
+** Groovy
+** SoaModelCore
+** JaxWsRI
 * Either JDK7 (preferred) or JDK6 installed and available via PATH
 
 Project Structure
@@ -231,6 +234,7 @@ Here is a list of the 3rd party products and tools we are using for this project
 * [Git](http://git-scm.org) ... for accessing hosted source code
 * [Groovy](http://groovy.codehaus.org) ... a scripting language for the Java VM
 * [Java](http://java.oracle.com) ... the programming language and execution environment we use
+* [JaxWS](http://jax-ws.java.net/) ... the reference implementation of JaxWS
 * [Membrane-SOA](http://www.membrane-soa.org/) ... the wsdl diff tool be use for test validation
 * Linux, Bash, ...
 
