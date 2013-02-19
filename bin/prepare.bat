@@ -28,7 +28,7 @@ if not exist "%D%..\lib" mkdir "%D%\..\lib"
 copy "%WSDLDIFF_JAR_ABSOLUTE_PATH%" "%D%\..\lib\."
 
 set JAXWSRI_VERSION=2.2.7
-set JAXWSRI_ZIP_BASENAME=jaxws-tools-%JAXWSRI_VERSION%.jar
+set JAXWSRI_ZIP_BASENAME=jaxws-ri-%JAXWSRI_VERSION%.zip
 set JAXWSRI_ZIP_DOWNLOAD_URL=http://repo1.maven.org/maven2/com/sun/xml/ws/jaxws-ri/%JAXWSRI_VERSION%/%JAXWSRI_ZIP_BASENAME%
 set JAXWSRI_ZIP_ABSOLUTE_PATH=%TPD%\%JAXWSRI_ZIP_BASENAME%
 if exist "%JAXWSRI_ZIP_ABSOLUTE_PATH%" goto end_jaxwsri_download
