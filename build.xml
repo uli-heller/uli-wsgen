@@ -129,13 +129,13 @@
 </target>
 
 <target name="httpcat" depends="httpcat.jar">
-  <copy file="scripts/dist.sh" tofile="bin/httpcat.sh"/>
+  <copy overwrite="true" file="scripts/dist.sh" tofile="bin/httpcat.sh"/>
   <fixcrlf file="bin/httpcat.sh" eol="unix" eof="remove"/>
   <concat append="true" binary="true" destfile="bin/httpcat.sh">
     <fileset dir="." includes="httpcat.jar"/>
   </concat>
   <chmod file="bin/httpcat.sh" perm="a+x"/>
-  <copy file="scripts/dist.bat" tofile="bin/httpcat.bat"/>
+  <copy overwrite="true" file="scripts/dist.bat" tofile="bin/httpcat.bat"/>
   <fixcrlf file="bin/httpcat.bat" eol="dos" eof="add"/>
   <concat append="true" binary="true" destfile="bin/httpcat.bat">
     <fileset dir="." includes="httpcat.jar"/>
