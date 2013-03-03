@@ -16,9 +16,9 @@ Requirements
 To compile and use this project, you'll need
 
 * Internet access to download various 3rd-party tools
-** Groovy
-** SoaModelCore
-** JaxWsRI
+    * Groovy
+    * SoaModelCore
+    * JaxWsRI
 * Either JDK7 (preferred) or JDK6 installed and available via PATH
 
 Project Structure
